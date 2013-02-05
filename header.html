@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+     <head>
+	  <meta charset="UTF-8" />
+	  <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+	  <!-- some meta tags, important for SEO"-->
+	  <meta name="description" content="put a short description in here" />
+	  <meta name="keywords" content="put your important keywords in here" />
+	  <meta name="revisit-after" content="7 days" />
+	  <meta name="robots" content="index,follow" />
+
+	  <title>Proyecto Amadeus.</title>
+
+	  <link rel="shortcut icon" href="favicon.ico" />
+	  <link rel="apple-touch-icon-precomposed" href="img/icon.png" />
+
+	  <link rel="stylesheet" href="css/inuit.css" />
+	  <link rel="stylesheet" href="css/fluid-grid16-1100px.css" />
+	  <link rel="stylesheet" href="css/eve-styles.css" />
+	  <link rel="stylesheet" href="css/flexslider.css" />
+
+	  <script src="js/jquery190min.js" type="text/javascript"></script>
+	  <script src="js/respond-min.js" type="text/javascript"></script>
+	  <script src="js/jquery.flexslider-min.js" type="text/javascript"></script>
+
+	  <script type="text/javascript">
+	       $(window).load(function() {
+		    $('.flexslider').flexslider({
+			 animation: "slide",<!--you can also choose fade here-->
+			 directionNav: false,<!--Attention: if you choose true here, the nav-buttons will also appear in the ticker! -->
+			 keyboardNav: true,
+			 mousewheel: true
+		    });
+	       });
+	  </script>
+
+	  <!--Hide the hr img because of ugly borders in IE7. You can change the color of border-top to display a line -->
+	  <!--[if lte IE 7]>
+
+	      <style>
+		      hr { display:block; height:1px; border:0; border-top:1px solid #fff; margin:1em 0; padding:0; }
+		  .grid-4{ width:22% }
+	      </style>
+	  <![endif]-->
+
+     </head>
+
+<body>

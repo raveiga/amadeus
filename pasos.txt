@@ -1,0 +1,6 @@
+1.- Descargar plantilla
+2.- Realizar división de plantilla en partes para incluir posteriormente en ficheros.
+3.- Probar funcionamiento con index.php
+3.- Crear fichero controlador.php
+4.- URL amigables (.htaccess)
+5.- Crear tablas de MySQL
