@@ -2,7 +2,6 @@
 <div class="grids top">
 <div class="grid-17 grid">
 
-
        <div class="flexslider"><!--http://flex.madebymufffin.com/-->
 
 		    <ul class="slides">

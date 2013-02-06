@@ -1,0 +1,55 @@
+RewriteEngine on
+DirectoryIndex inicio.html
+Options -Indexes
+RewriteRule ^(.+).html$ controlador.php?inc=$1
+
+
+
+
+##################################
+## Expresiones regulares: http://es.wikipedia.org/wiki/Expresi%C3%B3n_regular
+
+# ^(.*).html$
+# ^ comienzo del patrón pero dentro de corchetes [] es NO
+# $ fin del patrón
+# () subpatron (Cq cosa que esté entre paréntesis y que coincida con la regla será recordada por la RewriteRule.
+# . -> cq. caracter
+# * -> que el carácter que le precede se repita 0,1 o más veces
+# [] - > representan clases de caracteres
+# [^/\.] -> que contenga cq. caracter menos / y el .
+# \ -> La barra inversa no se utiliza nunca por sí sola, sino en combinación con otros caracteres.
+# \. = carácter .
+# ? = cadena repetida 0 ó 1 vez
+# + = cadena repetida 1 ó más veces
+# * = indica que el carácter que le precede puede aparecer 0, 1, ó más veces
+
+# [QSA,L]
+# With the [QSA] flag, a request for /pages/123?one=two will be mapped to /page.php?page=123&one=two.
+# Without the [QSA] flag, that same request will be mapped to /page.php?page=123 - that is, the existing query string will be discarded.
+
+# 10 mod rewrite rules you should know
+# http://www.noupe.com/php/10-mod_rewrite-rules-you-should-know.html
+
+######################################################################
+# http://www.workingwith.me.uk/articles/scripting/mod_rewrite
+
+# RewriteRule ^page/([^/\.]+)/?$ index.php?page=$1 [L]
+# Let’s walk through that RewriteRule, and work out exactly what’s going on:
+
+# ^page/
+# Sees whether the requested page starts with page/. If it doesn’t, this rule will be ignored.
+
+# ([^/.]+)
+# Here, the enclosing brackets signify that anything that is matched will be remembered by the RewriteRule.
+# Inside the brackets, it says “I’d like one or more characters that aren’t a #forward slash or a period, please”.
+# Whatever is found here will be captured and remembered.
+
+# /?$
+# Makes sure that the only thing that is found after what was just matched is a possible forward slash, and nothing else.
+# If anything else is found, then this RewriteRule will be # ignored.
+
+# index.php?page=$1
+# The actual page which will be loaded by Apache. $1 is magically replaced with the text which was captured previously.
+
+# [L]
+# Tells Apache to not process any more RewriteRules if this one was successful.
