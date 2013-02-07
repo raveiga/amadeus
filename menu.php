@@ -1,6 +1,6 @@
 <div class="wrapper">
      <a href="./" id="logo"><img src="img/logo.png" alt="something" />
-	  <h1 class="accessibility">Amadeus - Desarrollo Web Entorno Servidor Modular - San Clemente.</h1></a>
+	  <h1 class="accessibility">Amadeus - Desarrollo Web Entorno Servidor Modular - IES San Clemente.</h1></a>
 
      <div class="social">
 	  <a href="http://www.facebook.com/profile.php?id=100001520859552" title="facebook"><img src="img/facebook.png" width="20" height="20" alt="facebook"></a>
@@ -12,8 +12,8 @@
 
      <!-- Menú de opciones -->
      <ul id="nav" class="main">
-	  <li><a href="#" class="active">Inicio</a></li>
-	  <li><a href="#">Opcion1</a></li>
+	  <li><a href="index.html" class="active">Inicio</a></li>
+	  <li><a href="registro.html">Registro</a></li>
 	  <li><a href="#">Opcion2</a></li>
 	  <li><a href="#">Opcion3</a></li>
 	  <li><a href="#">Opcion4</a></li>

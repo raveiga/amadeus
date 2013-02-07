@@ -1,9 +1,7 @@
 RewriteEngine on
-DirectoryIndex inicio.html
+DirectoryIndex index.html
 Options -Indexes
 RewriteRule ^(.+).html$ controlador.php?inc=$1
-
-
 
 
 ##################################

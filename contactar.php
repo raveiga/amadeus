@@ -177,3 +177,4 @@
 
 		    </div><!--end of grid-10-->
 	       </div><!--end of grids-->
+  </div>
