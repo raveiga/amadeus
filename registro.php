@@ -31,6 +31,10 @@
 
 		    // Hack para que funcione el .focus()en cualquier navegador. Consiste en hacer un setTimeout con tiempo de espera 0 segundos y que
 		    // llame al método .focus() sobre el objeto $("#nombre")
+		    // Información sobre burbujeo de eventos:
+		    // http://www.slideshare.net/demimismo/javascript-en-proyectos-reales-jquery-presentation (paginas 32 a 38)
+		    // http://www.quirksmode.org/js/events_order.html
+
 		    setTimeout('$("#nombre").focus()',0);
 
 		    // Utilizamos clearQueue para conseguir, que si hacemos varios clicks seguidos, se cancelen los efectos de fade pendientes de clicks anteriores.
