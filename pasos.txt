@@ -16,6 +16,7 @@
 8.- Formulario de registro en el sistema
 
 [dia 4]
-9.- Grabación de datos en la tabla
-10.- Envío de correo electrónico
-11.- Confirmación del registro
+- Actualización a librería jquery 1.9.1
+- Introducción a jQuery
+- jQuery en formulario de registro para comprobación de nick en uso
+
