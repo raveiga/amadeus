@@ -13,63 +13,54 @@
 	       // $("#email").val("@");
 	       // Otra forma de hacerlo:
 	       $(this).val("@");
-       	  });
-
-
-	  // Cuando el campo nombre pierda el foco, comprobamos si tiene o no tiene valores y mostramos mensaje.
-	  $("#nombre").blur(function(){
-
-	       if ($(this).val()== "")
-	       {
-		    // Cuando se oculta el objeto con fadeIn o fadeOut o hide deja de ocupar espacio en el documento
-		    // y en este caso provoca que haya un desplazamiento vertical del formulario al usar esos efectos.
-		    //
-		    // Usaremos fadeTo, que juega con la opacidad del objeto (de transparente a opaco), pero siempre ocupará el espacio original.
-		    // Usaremos fadeTo, que ajusta la opacidad sin ocultar el objeto.
-		    // http://api.jquery.com/fadeTo/
-		    // fadeTo(duración,opacidad,[funcion])
-
-		    // Hack para que funcione el .focus()en cualquier navegador. Consiste en hacer un setTimeout con tiempo de espera 0 segundos y que
-		    // llame al método .focus() sobre el objeto $("#nombre")
-		    // Información sobre burbujeo de eventos:
-		    // http://www.slideshare.net/demimismo/javascript-en-proyectos-reales-jquery-presentation (paginas 32 a 38)
-		    // http://www.quirksmode.org/js/events_order.html
-
-		    setTimeout('$("#nombre").focus()',0);
-
-		    // Utilizamos clearQueue para conseguir, que si hacemos varios clicks seguidos, se cancelen los efectos de fade pendientes de clicks anteriores.
-		    // Probad el funcionamiento con y sin clearQueue() haciendo varios clicks seguidos.
-		    $("#mensajes").clearQueue().fadeTo(0,0).html("El campo nombre es obligatorio").fadeTo(500,1).css("background-color","red").delay(400).fadeTo(2000,0);
-	       }
 	  });
 
 
-	  // Vamos a hacer una petición Ajax que cargue con el método .load() lo que nos devuelve el fichero pasos.txt, en el objeto #mensajes.
-	  // http://api.jquery.com/category/ajax/shorthand-methods/
-
 	  $("#nick").blur(function(){
-	       // $("#mensajes").clearQueue().fadeTo(0,0).load("pasos.txt").css("background-color","green").fadeTo(2000,1);
 
-	       // Lo mismo que el método anterior, pero usando el método $.get()
-	       $.get("pasos.txt",function(resultados){
-		    $("#mensajes").clearQueue().fadeTo(0,0).html(resultados).css("background-color","green").fadeTo(1000,1).fadeTo(1000,0);
+	       $.post("chequearnick.php", {nick: $("#nick").val()}, function(respuesta){
+
+		    if (respuesta == "Nick en uso" ||  $("#nick").val()=="")
+		    {
+			 // Cuando se oculta el objeto con fadeIn o fadeOut o hide deja de ocupar espacio en el documento
+			 // y en este caso provoca que haya un desplazamiento vertical del formulario al usar esos efectos.
+			 //
+			 // Usaremos fadeTo, que juega con la opacidad del objeto (de transparente a opaco), pero siempre ocupará el espacio original.
+			 // Usaremos fadeTo, que ajusta la opacidad sin ocultar el objeto.
+			 // http://api.jquery.com/fadeTo/
+			 // fadeTo(duración,opacidad,[funcion])
+
+			 // Hack para que funcione el .focus()en cualquier navegador. Consiste en hacer un setTimeout con tiempo de espera 0 segundos y que
+			 // llame al método .focus() sobre el objeto $("#nombre")
+			 // Información sobre burbujeo de eventos:
+			 // http://www.slideshare.net/demimismo/javascript-en-proyectos-reales-jquery-presentation (paginas 32 a 38)
+			 // http://www.quirksmode.org/js/events_order.html
+
+			 setTimeout('$("#nick").focus()',0);
+
+			 // Utilizamos clearQueue para conseguir, que si hacemos varios clicks seguidos, se cancelen los efectos de fade pendientes de clicks anteriores.
+			 // Probad el funcionamiento con y sin clearQueue() haciendo varios clicks seguidos.
+			 $("#mensajes").clearQueue().fadeTo(0,0).html("El campo nombre es obligatorio").fadeTo(500,1).css("background-color","red").delay(400).fadeTo(2000,0);
+		    }
 	       });
 	  });
 
-	  // Se pide realizar una petición ajax a una página chequeanick.php usando el método AJAX:  $.post()
-	  // chequeanick.php devolverá un mensaje de OK (si el nick es válido) o ERROR (si el nick está en uso).
-	  // A esa página php le habrá que pasar el valor  del nick que hemos escrito en el campo para que lo compruebe.
-	  // Según el mensaje devuelto por la página php, tendrá que poner un color de fondo distinto sobre el campo del formulario: verde o rojo.
-	  // Al salir del campo nick desactivará el color verde de fondo, o no nos dejará salir de ese campo si éste está en color rojo.
-	  // Programar la petición Ajax para que se dispare durante el keyup del campo nick.
-	  // Para probarlo meter algún nick en la tabla a modo de ejemplo.
 
+	  // Programamos la consulta AJAX de nick en uso.
+	  $("#nick").keyup(function(){
+	       $.post("chequearnick.php", {nick: $("#nick").val()}, function(respuesta){
 
-
-
-
-
-
+		    if (respuesta == "Nick en uso")
+		    {
+			 $("#nick").css("background-color","red");
+			 $("#mensajes").clearQueue().fadeTo(0,0).html(respuesta).css("background-color","red").fadeTo(500,1).fadeTo(500,0);
+		    }
+		    else
+		    {
+			 $("#nick").css("background-color","green");
+		    }
+	       }) ;
+	  });
 
 
 

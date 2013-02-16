@@ -1,0 +1,21 @@
+Web jQuery:	http://jquery.com/
+
+Documentación:	http://api.jquery.com/
+
+
+// Enviamos a solicitude AJAX
+$.post("actualizar.php",{identificador: oidentificador , numcolumna: onumerocolumna, novovalor: $("input").val() },function(resultados)
+{
+		if (resultados=="OK")
+		{
+			// Facemos o fadeOut e modificamos o contido da celda polo texto actualizado.
+			celdapulsada.fadeOut(500, function()
+			{
+				$(this).html($("input").val()).fadeIn(function()
+				{
+					// Ocultamos o indicador AJAX.	
+					$("#reloxio").hide();
+				});
+			});
+		}
+});
