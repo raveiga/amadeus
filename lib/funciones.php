@@ -1,5 +1,5 @@
 <?php
-// Librería de funciones.
+// Librería de FUNCIONES.
 
 /**
  * Función de encriptación en Blowfish
