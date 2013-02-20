@@ -1,7 +1,7 @@
 <?php
 // Para bloquear la cache en navegadores para las peticiones AJAX.
 header('Cache-Control: no-cache, must-revalidate');
-header('Expires: Mon, 25 Jul 1990 00:00:00 GMT');
+header('Expires: Mon, 01 Jan 1973 00:00:00 GMT');
 
 // Cargamos la clase basedatos.
 require_once("lib/basedatos.php");
