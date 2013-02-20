@@ -13,12 +13,13 @@ $mibase = Basedatos::getInstancia();
 
 switch ($_GET['op']){
     case 1:  // Chequear nick
-    
-        
+          echo $mibase->chequearNick($_POST['nick']);
         break;
     
     case 2: // Alta de usuarios
         echo $mibase->insertarUsuario($_POST['nick'],$_POST['password'],$_POST['nombre'],$_POST['apellidos'],$_POST['dni'],$_POST['email'],$_POST['telefono']);
+        // Enviamos a continuación el correo de registro.
+        
         
         break;
     

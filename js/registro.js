@@ -18,12 +18,11 @@ $(document).ready(function()
     });
     */
 
-    $("#nick").blur(function(){
-
-        $.post("chequearnick.php", {
-            nick: $("#nick").val()
-        }, function(respuesta){
-
+    $("#nick").blur(function()
+    {
+        // Operacion op=1 -> chequear nick.
+        $.post("peticiones.php?op=1", { nick: $("#nick").val() }, function(respuesta)
+        {
             if (respuesta == "Nick en uso" ||  $("#nick").val()=="")
             {
                 // Cuando se oculta el objeto con fadeIn o fadeOut o hide deja de ocupar espacio en el documento
@@ -51,10 +50,10 @@ $(document).ready(function()
 
 
     // Programamos la consulta AJAX para chequear el nick.
-    $("#nick").keyup(function(){
-        $.post("chequearnick.php", {
-            nick: $("#nick").val()
-        }, function(respuesta){
+    $("#nick").keyup(function()
+    {
+        $.post("peticiones.php?op=1", { nick: $("#nick").val() }, function(respuesta)
+        {
 
             if (respuesta == "Nick en uso")
             {
@@ -70,7 +69,8 @@ $(document).ready(function()
 
 
     // Cuando se produzca el evento de submit.
-    $("#formulario").submit(function(evento){
+    $("#formulario").submit(function(evento)
+    {
         // Cancelamos la acción principal del evento con preventDefault().
         evento.preventDefault();
           
