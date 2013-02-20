@@ -73,7 +73,8 @@ function enviarCorreo($nombreDestinatario, $emailDestinatario, $asunto, $conteni
             $puerto = Config::$mailPuerto;
 
         // Está configurado el servidor de correo?
-        if ($servidorCorreo != '' && $usuarioCorreo != '' && $passwordCorreo != '') {
+        if ($servidorCorreo != '' && $usuarioCorreo != '' && $passwordCorreo != '') 
+        {
             // Pendiente validación de SPAM en el correo.
             // Creamos el objeto de tipo phpmailer
             $correo = new PHPMailer();
