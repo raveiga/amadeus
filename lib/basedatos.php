@@ -40,7 +40,7 @@ class Basedatos{
             
             // Creamos el objeto mysqli y lo asignamos a $_mysqli
             self::$_mysqli=@new mysqli(Config::$dbServidor, Config::$dbUsuario, Config::$dbPassword, Config::$dbDatabase);
-            if (self::$_mysqli->connnect_error){
+            if (self::$_mysqli->connect_error){
                 echo "Error conectando Base Datos". self::$_mysqli->connect_error;
                 self::$_mysqli=false;
                 die();
@@ -69,6 +69,18 @@ class Basedatos{
     
     
     
+    /**
+     * Método insertarUsuario: insertar los datos recibidos como parámetros en la tabla de usuarios.
+     * 
+     * @param string $nick
+     * @param string $password
+     * @param string $nombre
+     * @param string $apellidos
+     * @param string $dni
+     * @param string $email
+     * @param string $telefono
+     * @return string "OK" indicando que se ha realizado con éxito la insercción de datos.
+     */
     public function insertarUsuario($nick, $password,$nombre,$apellidos,$dni,$email,$telefono){
         // Preparamos la instrucción SQL.
         $stmt=self::$_mysqli->prepare("insert into amadeus_usuarios(nick,password,nombre,apellidos,dni,email,telefono) values(?,?,?,?,?,?,?)") or die(self::$_mysqli->error);

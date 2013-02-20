@@ -7493,7 +7493,7 @@ CREATE TABLE IF NOT EXISTS `amadeus_usuarios` (
   `nombre` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `apellidos` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
   `dni` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
-  `e-mail` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `email` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `token` varchar(120) COLLATE utf8_spanish_ci NOT NULL,
   `fotografia` varchar(35) COLLATE utf8_spanish_ci NOT NULL,
   `telefono` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
