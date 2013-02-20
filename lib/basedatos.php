@@ -22,11 +22,6 @@ class Basedatos{
      */
     private static $_mysqli = false;
     
-    
-    private function __construct(){
-    
-    }
-    
     /**
      * Crea la conexión al servidor o devuelve error parando la ejecución.
      * 
@@ -86,7 +81,8 @@ class Basedatos{
         $stmt=self::$_mysqli->prepare("insert into amadeus_usuarios(nick,password,nombre,apellidos,dni,email,telefono) values(?,?,?,?,?,?,?)") or die(self::$_mysqli->error);
         
        // Enlazamos los parámetros.
-        $stmt->bind_param('sssssss',$nick,encriptar($password,10),$nombre,$apellidos,$dni,$email,$telefono);
+        $encriptada=encriptar($password,10);
+        $stmt->bind_param('sssssss',$nick,$encriptada,$nombre,$apellidos,$dni,$email,$telefono);
         
         // Ejecutamos la instrucción
         $stmt->execute() or die(self::$_mysqli->error);
