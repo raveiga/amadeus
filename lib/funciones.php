@@ -50,8 +50,8 @@ function enviarCorreo($nombreDestinatario, $emailDestinatario, $asunto, $conteni
     if (isset($emailDestinatario) && $emailDestinatario != '') {
         // Comenzamos con la configuración del correo.
         // Cargamos las librerías de phpmailer
-        require_once dirname(__FILE__) . '/class.phpmailer.php';
-        require_once dirname(__FILE__) . '/class.smtp.php';
+        require_once dirname(__FILE__) . '/phpmailer/class.phpmailer.php';
+        require_once dirname(__FILE__) . '/phpmailer/class.smtp.php';
         require_once dirname(__FILE__) . '/config.php';
 
         if ($nombreRemitente == '')
