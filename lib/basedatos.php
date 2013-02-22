@@ -74,17 +74,28 @@ class Basedatos {
      */
     public function insertarUsuario($nick, $password, $nombre, $apellidos, $dni, $email, $telefono) {
         // Preparamos la instrucción SQL.
-        $stmt = self::$_mysqli->prepare("insert into amadeus_usuarios(nick,password,nombre,apellidos,dni,email,telefono) values(?,?,?,?,?,?,?)") or die(self::$_mysqli->error);
+        $stmt = self::$_mysqli->prepare("insert into amadeus_usuarios(nick,password,nombre,apellidos,dni,email,telefono,token) values(?,?,?,?,?,?,?,?)") or die(self::$_mysqli->error);
 
         // Enlazamos los parámetros.
         $encriptada = encriptar($password, 10);
-        $stmt->bind_param('sssssss', $nick, $encriptada, $nombre, $apellidos, $dni, $email, $telefono);
+        $token=md5($encriptada);
+        $stmt->bind_param('ssssssss', $nick, $encriptada, $nombre, $apellidos, $dni, $email, $telefono,$token);
 
         // Ejecutamos la instrucción
         $stmt->execute() or die(self::$_mysqli->error);
 
-        return "OK";
-    }
+        $contenido="Estimado señor/a $nombre $apellidos.<br/><br/>Hemos recibido una petición de registros en nuestra web de viajes Amadeus.";
+        $contenido.="Si usted no ha realizado dicha petición, simplemente borre este correo y en breve el registro será borrado de nuestra base de datos.<br/><br/>";
+        $contenido.="En otro caso, confirme su registro antes de 24 H en la siguiente dirección de Amadeus:<br/>";
+        $contenido.="<a href='http://www.veiga.local/amadeus/confirmar.html?nick=$nick&token=$token'>Confirmación registro en web viajes Amadeus</a><br/><br/>";
+        $contenido.="IP registrada: ".obtenerIP()."<br/><br/>";
+        $contenido.="Reciba un cordial saludo.<br/><br/>Agencia de viajes Amadeus &copy; 2013.";
+        
+        if (enviarCorreo($nombre.' '.$apellidos,$email,'Confirmación registro en Viajes Amadeus',$contenido))
+                return "Registro realizado correctamente.<br/><br/>Le hemos enviado una confirmación a su correo electrónico:<br/>$email";
+        else
+                return "!! ATENCION !!<br/><br/>Se ha producido un fallo al enviar el correo a $email.<br/>Contacte con ".Config::$mailEmailRemitente." para informar del problema.";
+  }
 
     public function chequearNick($nick) {
         // Preparamos la consulta.

@@ -6,7 +6,6 @@
         -moz-border-radius:15px; /* Firefox */
         -webkit-border-radius:15px; /* Safari y Chrome */
         width:400px;
-        height:25px;
         text-align: center;
         vertical-align: middle;
         font-size: 15px;

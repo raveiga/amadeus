@@ -85,12 +85,9 @@ $(document).ready(function()
           
         // Se hace la petición a peticiones.php pasándole el código de peticion op, en este caso 2 quiere decir Alta de Usuarios.
         $.post("peticiones.php?op=2",datos,function(resultado){
-            if (resultado=="OK")
-            {
                 $("#formulario").fadeOut(function(){
-                    $("#mensajes").fadeTo(0,0).css("background-color","green").html("Su registro ha sido dado de alta correctamente").fadeTo(1,1);
+                    $("#mensajes").fadeTo(0,0).css("background-color","green").html(resultado).fadeTo(1,1);
                 });
-            }
         });
     }); 
 
