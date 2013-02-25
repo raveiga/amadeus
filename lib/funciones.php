@@ -269,6 +269,7 @@ function enviarCorreo($nombreDestinatario, $emailDestinatario, $asunto, $conteni
                 if ($correo->Send())
                     return true;
                 else
+                    // Más información del error en: $correo->ErrorInfo;
                     return false;
             }
         }

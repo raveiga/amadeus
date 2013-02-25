@@ -1,7 +1,7 @@
 RewriteEngine on
 DirectoryIndex index.html
 Options -Indexes
-RewriteRule ^(.+).html$ controlador.php?inc=$1
+RewriteRule ^(.+).html$ controlador.php?inc=$1 [QSA,L]
 
 
 ##################################

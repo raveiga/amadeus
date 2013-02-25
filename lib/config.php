@@ -2,6 +2,9 @@
 // Datos de configuración de la aplicación
 
 class Config{
+    // URL de la aplicación sin terminar en /. Por ejemplo: 'http://www.veiga.local/amadeus'
+    public static $urlAplicacion = 'http://www.veiga.local/amadeus';
+
     // Configuración de la base de datos.
     public static $dbServidor = 'localhost';
     public static $dbDatabase = 'c2base1';
@@ -15,6 +18,8 @@ class Config{
     public static $mailPuerto = '25';
     public static $mailUsuario = 'info@veiga.local';
     public static $mailPassword = 'abc123.';
+    
+    
     
     // Datos de configuración del servidor de correo para cuenta de GMAIL.
     // IMPORTANTE si usáis XAMPP: 

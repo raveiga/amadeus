@@ -77,6 +77,7 @@ class Basedatos {
         $stmt = self::$_mysqli->prepare("insert into amadeus_usuarios(nick,password,nombre,apellidos,dni,email,telefono,token) values(?,?,?,?,?,?,?,?)") or die(self::$_mysqli->error);
 
         // Enlazamos los parámetros.
+        $nick=strtolower($nick);
         $encriptada = encriptar($password, 10);
         $token=md5($encriptada);
         $stmt->bind_param('ssssssss', $nick, $encriptada, $nombre, $apellidos, $dni, $email, $telefono,$token);
@@ -87,7 +88,7 @@ class Basedatos {
         $contenido="Estimado señor/a $nombre $apellidos.<br/><br/>Hemos recibido una petición de registros en nuestra web de viajes Amadeus.";
         $contenido.="Si usted no ha realizado dicha petición, simplemente borre este correo y en breve el registro será borrado de nuestra base de datos.<br/><br/>";
         $contenido.="En otro caso, confirme su registro antes de 24 H en la siguiente dirección de Amadeus:<br/>";
-        $contenido.="<a href='http://www.veiga.local/amadeus/confirmar.html?nick=$nick&token=$token'>Confirmación registro en web viajes Amadeus</a><br/><br/>";
+        $contenido.="<a href='".Config::$urlAplicacion."/confirmar.html?nick=$nick&token=$token'>Confirmación registro en web viajes Amadeus</a><br/><br/>";
         $contenido.="IP registrada: ".obtenerIP()."<br/><br/>";
         $contenido.="Reciba un cordial saludo.<br/><br/>Agencia de viajes Amadeus &copy; 2013.";
         
@@ -124,6 +125,48 @@ class Basedatos {
             return "Nick disponible";
     }
 
-}
 
+    public function confirmarRegistro($nick,$token)
+    {
+        $nick=strtolower($nick);
+        
+        $stmt= self::$_mysqli->prepare("select * from amadeus_usuarios where nick=? and token=?") or die(self::$_mysqli->error);
+        
+        // Enlazamos los parámetros con bind_param.
+        $stmt->bind_param("ss",$nick,$token);
+        
+        // Ejecutamos la consulta
+        $stmt->execute();
+        
+        // Almacenamos el resultado.
+        $stmt->store_result();
+        
+        // Número de filas obtenidas en la consulta.
+        $numfilas = $stmt->num_rows;
+        
+        if ($numfilas ==1)
+        {
+            // Los datos son correctos.
+            // Actualizamos el token a OK.
+            
+            // Preparamos la consulta de actualizacion
+            $stmt=self::$_mysqli->prepare("update amadeus_usuarios set token='OK' where nick=?") or die(self::$_mysqli->error);
+            
+            // Enlazamos el parámetro
+            $stmt->bind_param('s',$nick);
+            
+            // Ejecutamos la instrucción
+            $stmt->execute() or die(self::$_mysqli->error);
+            
+            // Devolvemos el mensaje
+            return "<h3>Su registro ha sido confirmado satisfactoriamente</h3>";
+        }
+        else
+            return "Error: los datos de validación son incorrectos";
+    }
+    
+    
+    
+    
+    }
 ?>
