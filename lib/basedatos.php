@@ -11,7 +11,6 @@ require_once dirname(__FILE__) . '/funciones.php';
 class Basedatos {
 
     /**
-     *
      * @var Basedatos Contiene la instancia de Basedatos. 
      */
     private static $_instancia;
@@ -23,6 +22,10 @@ class Basedatos {
      */
     private static $_mysqli = false;
 
+    
+    
+    
+    //----------------------------------------------------------------------------------------------------
     /**
      * Crea la conexión al servidor o devuelve error parando la ejecución.
      * 
@@ -46,7 +49,12 @@ class Basedatos {
         return self::$_instancia;
     }
 
+    
+    
+    
+    //----------------------------------------------------------------------------------------------------
     /**
+     * Función close()
      * Cierra una conexión activa con el servidor
      * 
      * @access public
@@ -60,8 +68,13 @@ class Basedatos {
         return true;
     }
 
+    
+    
+    
+    //----------------------------------------------------------------------------------------------------
     /**
-     * Método insertarUsuario: insertar los datos recibidos como parámetros en la tabla de usuarios.
+     * Función insertarUsuario()
+     * Inserta los datos recibidos como parámetros en la tabla de usuarios.
      * 
      * @param string $nick
      * @param string $password
@@ -98,6 +111,16 @@ class Basedatos {
                 return "!! ATENCION !!<br/><br/>Se ha producido un fallo al enviar el correo a $email.<br/>Contacte con ".Config::$mailEmailRemitente." para informar del problema.";
   }
 
+  
+  
+    //----------------------------------------------------------------------------------------------------
+    /**
+     * Función chequearNick()
+     * Comprueba si existe el nick en la base de datos.
+     * 
+     * @param string $nick Nick del usuario.
+     * @return string Mensaje de en uso o disponible.
+     */  
     public function chequearNick($nick) {
         // Preparamos la consulta.
         $stmt = self::$_mysqli->prepare("SELECT * from amadeus_usuarios where nick=?") or (self::$_mysqli->error);
@@ -125,7 +148,18 @@ class Basedatos {
             return "Nick disponible";
     }
 
-
+    
+    
+    
+    //----------------------------------------------------------------------------------------------------
+    /**
+     * Función confirmarRegistro()
+     * Actualiza el token del usuario enviado por e-mail
+     * 
+     * @param string $nick Nick del usuario.
+     * @param string $token Token recibido por e-mail.
+     * @return string Mensaje de confirmación de actualización.
+     */
     public function confirmarRegistro($nick,$token)
     {
         $nick=strtolower($nick);
