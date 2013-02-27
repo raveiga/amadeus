@@ -1,4 +1,7 @@
 <?php
+// Activamos las variables de sesión.
+@session_start();
+
 // Para bloquear la cache en navegadores para las peticiones AJAX.
 header('Cache-Control: no-cache, must-revalidate');
 header('Expires: Mon, 01 Jan 1973 00:00:00 GMT');
@@ -19,12 +22,10 @@ switch ($_GET['op']){
     case 2: // Alta de usuarios
         echo $mibase->insertarUsuario($_POST['nick'],$_POST['password'],$_POST['nombre'],$_POST['apellidos'],$_POST['dni'],$_POST['email'],$_POST['telefono']);
         // Enviamos a continuación el correo de registro.
-        
-        
         break;
     
-    case 3: // Listado de Usuarios
-        
+    case 3: // Chequear Inicio sesión
+        echo $mibase->chequearAcceso($_POST['nick'],$_POST['password']);
         break;
  }
 

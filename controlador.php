@@ -1,4 +1,7 @@
 <?php
+// Activamos las sesiones
+@session_start();
+
 // Comprobamos si el parámetro inc existe y es distinto del vacio.
 if (isset($_GET['inc']) && $_GET['inc']!="")
 
