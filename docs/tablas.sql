@@ -7495,7 +7495,7 @@ CREATE TABLE IF NOT EXISTS `amadeus_usuarios` (
   `dni` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
   `email` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `token` varchar(120) COLLATE utf8_spanish_ci NOT NULL,
-  `fotografia` varchar(35) COLLATE utf8_spanish_ci NOT NULL,
+  `fotografia` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `telefono` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
   PRIMARY KEY (`nick`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Usuarios del sistema';

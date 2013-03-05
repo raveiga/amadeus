@@ -32,20 +32,27 @@ class Basedatos {
         if (!self::$_instancia instanceof self) {
             // Creamos una nueva instancia de basedatos.
             self::$_instancia = new self;
-
-            // Creamos el objeto mysqli y lo asignamos a $_mysqli
-            self::$_mysqli = @new mysqli(Config::$dbServidor, Config::$dbUsuario, Config::$dbPassword, Config::$dbDatabase);
-            if (self::$_mysqli->connect_error) {
-                echo "Error conectando Base Datos" . self::$_mysqli->connect_error;
-                self::$_mysqli = false;
-                die();
-            }
         }
 
         // Si la instancia ya estaba creada, la devolvemos.
         return self::$_instancia;
     }
 
+    
+    private function __construct()
+    {
+                   // Creamos el objeto mysqli y lo asignamos a $_mysqli
+            self::$_mysqli = @new mysqli(Config::$dbServidor, Config::$dbUsuario, Config::$dbPassword, Config::$dbDatabase);
+            if (self::$_mysqli->connect_error) {
+                echo "Error conectando Base Datos" . self::$_mysqli->connect_error;
+                self::$_mysqli = false;
+                die();
+            } 
+    }
+    
+    
+    
+    
     //----------------------------------------------------------------------------------------------------
     /**
      * Función close()
@@ -231,6 +238,176 @@ class Basedatos {
             return "ERROR: datos de acceso incorrectos.";
     }
 
-}
+ 
+    //----------------------------------------------------------------------------------------------------
+    /**
+     * Función obtenerInfoUsuario
+     * Devuelve la información del usuario en formato JSON que hay en la base de datos, y actualiza las variables de sesión.
+     * 
+     * 
+     */
+    public function obtenerInfoUsuario()
+    {
+        // Preparamos la consulta.
+        $stmt = self::$_mysqli->prepare("select password, nombre, apellidos, dni, email, telefono, token, fotografia from amadeus_usuarios where nick=?") or die (self::$_mysqli->error);
+        
+        $nick=$_SESSION['usuario'];
+        $stmt->bind_param("s",$nick);
+        
+        // Ejecutamos la consulta.
+        $stmt->execute();
+        
+        // Almacenamos el resultado.
+        $stmt->store_result();
+        
+        // Vinculamos las variables para el recordset.
+        $stmt->bind_result($password, $nombre, $apellidos, $dni, $email, $telefono, $token, $fotografia);
+        
+        // Leemos la fila del recordset
+        $stmt->fetch();
+        
+        // Metemos todos los datos en un array.
+        $datos=array("nick"=>$nick,"password"=>$password, "nombre"=>$nombre, "apellidos"=>$apellidos, "dni"=>$dni, "email"=>$email, "telefono"=>$telefono, "token"=>$token, "fotografia"=>$fotografia);
+        
+        $_SESSION['nombre']=$nombre;
+        $_SESSION['apellidos']=$apellidos;
+        $_SESSION['password']=$password;
+        $_SESSION['email']=$email;
+        $_SESSION['token']=$token;
+        $_SESSION['fotografia']=$fotografia;
+        
+        // Devolvemos el array a la pagina ajax en formato JSON
+        echo json_encode($datos);
+        
+        // Liberamos el espacio ocupado por el recordset
+        $stmt->free_result();
+    }
+    
+    
+    
+    
+    
+    
+    //----------------------------------------------------------------------------------------------------
+    /**
+     * Función actualizarUsuario
+     * Actualiza la información del usuario en la base de datos.
+     * 
+     * 
+     * @param string $pass
+     * @param string $nombre
+     * @param string $apellidos
+     * @param string $dni
+     * @param string $email
+     * @param string $telefono
+     * @return string Mensaje de confirmación de la actualización de confirmación del usuario.
+     */
+    public function actualizarUsuario($pass, $nombre, $apellidos, $dni, $email, $telefono){
+        // Usamos el nick del usuario logueado.
+        $nick = $_SESSION['usuario'];
+        
+        // Comprobamos si se modificó la contraseña original.
+        if ($pass != $_SESSION['password'])
+            $encriptada= encriptar($pass,10);
+        else
+            $encriptada = $_SESSION['password'];
+        
+        
+        // Comprobamos si se modificó el e-mail.
+        // Si se modificó, tenemos que modificar el token.
+        if ($email != $_SESSION['email'])
+            $token = md5($encriptada);
+        else
+            $token = $_SESSION['token'];
+        
+        // Preparamos la instrucción SQL.
+        $stmt=self::$_mysqli->prepare("update amadeus_usuarios set password=?, nombre=?, apellidos=?, dni=?, email=?, telefono=?, token=? where nick=?") or die(self::$_mysqli->error);
+        
+        // Enlazamos los parámetros.
+        $stmt->bind_param("ssssssss",$encriptada, $nombre, $apellidos, $dni, $email, $telefono, $token, $nick);
+        
+        // Ejecutamos la instrucción.
+        $stmt->execute() or die(self::$_mysqli->error);
+        
+        // Si el email se modificó reenviamos el correo.
+        if ($email != $_SESSION['email'])
+        {
+            $contenido = "Estimado señor/a $nombre $apellidos.<br/><br/>Hemos recibido una petición de modificación de e-mail en su cuenta de viajes Amadeus.";
+        $contenido.="Debe confirmar este cambio de correo para poder volver acceder a la web Amadeus. Hágalo en la siguiente dirección:<br/>";
+        $contenido.="<a href='" . Config::$urlAplicacion . "/confirmar.html?nick=$nick&token=$token'>Confirmación cambio de e-mail en web viajes Amadeus</a><br/><br/>";
+        $contenido.="IP registrada: " . obtenerIP() . "<br/><br/>";
+        $contenido.="Reciba un cordial saludo.<br/><br/>Agencia de viajes Amadeus &copy; 2013.";
 
+        if (enviarCorreo($nombre . ' ' . $apellidos, $email, 'Confirmación cambio e-mail en Viajes Amadeus', $contenido))
+            return "Cambios realizados correctamente.<br/><br/>Acceda a su correo electrónico:<br/>$email<br/>para confirmar el cambio.";
+        else
+            return "!! ATENCION !!<br/><br/>Se ha producido un fallo al enviar el correo a $email.<br/>Contacte con " . Config::$mailEmailRemitente . " para informar del problema.";
+       
+        }
+        
+        return "Se han realizados los cambios correctamente.";
+        
+        
+    }
+    
+    
+    
+    //----------------------------------------------------------------------------------------------------
+    /**
+     * Función actualizarFoto
+     * Actualiza el nombre de la fotografía en la tabla del usuario.
+     * 
+     * @param string $fotografia El nombre del fichero que se actualizará en el campo de la tabla.
+     * @return boolean true cuando termina la actualización de la fotografía.
+     */
+    public function actualizarFoto($fotografia) {
+        // El nick es el del usuario logueado.
+        $nick = $_SESSION['usuario'];
+
+        // Preparamos la instrucción SQL.
+        $stmt = self::$_mysqli->prepare("update amadeus_usuarios set fotografia=? where nick=?") or die(self::$_mysqli->error);
+
+        // Enlazamos los parámetros.
+        $stmt->bind_param('ss', $fotografia, $nick);
+
+        // Ejecutamos la instrucción
+        $stmt->execute() or die(self::$_mysqli->error);
+
+        return true;
+    }
+    
+    
+    
+    //----------------------------------------------------------------------------------------------------
+    /**
+     * Función borrarFoto
+     * Actualiza el campo fotografia en la tabla.
+     * 
+     * @return boolean true al termina.
+     */
+    public function borrarFoto()
+    {
+        // El nick del usuario es:
+        $nick = $_SESSION['usuario'];
+        
+        // Preparamos la instrucción SQL.
+        $stmt=self::$_mysqli->prepare("update amadeus_usuarios set fotografia='' where nick=?") or die(self::$_mysqli->error);
+        
+        // Enlazamos el parámetro ?
+        $stmt->bind_param("s",$nick);
+        
+        // Ejecutamos la instrucción.
+        $stmt->execute() or die(self::$_mysqli->error);
+        
+        return true;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+}
 ?>

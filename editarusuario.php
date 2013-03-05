@@ -1,4 +1,4 @@
-<script type="text/javascript" src="js/editar_usuario.js"></script>
+<script type="text/javascript" src="js/editarusuario.js"></script>
 
 <style type="text/css">
     #mensajes{
@@ -22,6 +22,10 @@
                 <ul>
                     <li><a href="editarusuario.html" />Modifique sus datos personales</a></li>
                     <li><a href="subirfoto.html" />Subir Fotografía</a></li>
+                    <?php
+                    if (isset($_SESSION['fotografia']) && $_SESSION['fotografia']!='')
+                        echo '<li><a href="borrarfoto.php" />Borrar Fotografía</a></li>';
+                    ?>
                     <li><a href="bajausuario.html" />Darse de Baja</a></li>
                 </ul>
                 </p>

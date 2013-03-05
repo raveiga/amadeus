@@ -27,6 +27,16 @@ switch ($_GET['op']){
     case 3: // Chequear Inicio sesión
         echo $mibase->chequearAcceso($_POST['nick'],$_POST['password']);
         break;
+    
+    
+    case 4: // Obtener los datos del usuario
+        echo $mibase->obtenerInfoUsuario();
+        break;
+    
+    case 5: // Actualizamos datos usuario logueado.
+        echo $mibase->actualizarUsuario($_POST['password'],$_POST['nombre'],$_POST['apellidos'],$_POST['dni'],$_POST['email'],$_POST['telefono']);
+        break;
+    
  }
 
 ?>
