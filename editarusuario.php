@@ -26,7 +26,7 @@
                     if (isset($_SESSION['fotografia']) && $_SESSION['fotografia']!='')
                         echo '<li><a href="borrarfoto.php" />Borrar Fotografía</a></li>';
                     ?>
-                    <li><a href="bajausuario.html" />Darse de Baja</a></li>
+                    <li><a href="#" id="bajausuario"/>Darse de Baja</a></li>
                 </ul>
                 </p>
             </div>

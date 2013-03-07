@@ -35,7 +35,7 @@
                             <label for="nick">Nick</label>
                         </th>
                         <td>
-                            <input type="text" id="nick" name="nick" required="required" />
+                            <input type="text" id="nick" name="nick" required="required" autofocus />
                         </td>
                     </tr>
                     <tr>

@@ -1,8 +1,5 @@
 <?php
-
 @session_start();
-
-echo __FILE__;
 
 // Directorio de envío de imágenes.
 $directorioImagenes = substr(__FILE__, 0, strlen(__FILE__) - strlen(basename(__FILE__))) . 'img/usuarios/';
@@ -12,9 +9,8 @@ $formatosPermitidos = array('jpg', 'jpeg', 'gif', 'png');
 
 if (isset($_SESSION['usuario'])) {
 
-    // Si recibimos fichero.
-    if (!empty($_FILES)) {
-
+    // Si recibimos fichero...
+    if ( $_FILES['ficherosubido']['size'] >0) {
         $partesFichero = pathinfo($_FILES['ficherosubido']['name']);
 
         // Comprobamos si es un extensión permitida.
@@ -32,7 +28,14 @@ if (isset($_SESSION['usuario'])) {
             require_once("lib/basedatos.php");
             $mibase = Basedatos::getInstancia();
 
-            // Si pudo actualizar la foto en la base de datos....
+            // Si ese ususario tenía una fotografía antigua, la borramos del servidor.
+            if (isset($_SESSION['fotografia']) && $_SESSION['fotografia']!='')
+            {
+                $ficheroBorrar=$directorioImagenes.$_SESSION['fotografia'];
+                unlink($ficheroBorrar);
+            }
+            
+            // Actualizamos la foto en la base de datos.
             if ($mibase->actualizarFoto($nombreFicheroAvatar)) {
                 $_SESSION['fotografia'] = $nombreFicheroAvatar;
                 // Nos redirecciona a la página de subirfoto.html.
@@ -42,6 +45,7 @@ if (isset($_SESSION['usuario'])) {
         else
             echo "ERROR: El formato de archivo no está permitido.";
     } // EMPTY FILES.
+    header("location: subirfoto.html");
 } // 
 else
     echo "ERROR: Acceso no permitido a la aplicación.";
