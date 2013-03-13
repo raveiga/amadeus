@@ -19,7 +19,8 @@
      <!-- Menú de opciones -->
      <ul id="nav" class="main">
 	  <li><a href="index.html">Inicio</a></li>
-          <li><a href="http://www.veiga.local/amadeus/contactar.html">Contactar</a></li>
+          <li><a href="contactar.html">Contactar</a></li>
+          <li><a href="aeropuertos.html">Aeropuertos</a></li>
           <?php
           if (isset($_SESSION['usuario']))
           {
