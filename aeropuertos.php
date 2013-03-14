@@ -1,3 +1,6 @@
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=&sensor=false"></script>
+<script type="text/javascript" src="js/aeropuertos.js"></script>
+
 <div class="wrapper">
     <div class="grids top">
         <div class="grid-3 grid">
