@@ -235,9 +235,9 @@ $(document).ready(function()
         // Ponemos el contenido en infomapa.
         $("#infomapa").html(infoVuelo(mMadrid,mNyork));
        
-        $("#infomapa").fadeTo(800,1,function()
+        $("#infomapa").stop().fadeTo(800,1,function()
         {
-            $(this).delay(1800).fadeTo(600,0);
+            $(this).delay(2000).fadeTo(600,0);
         });
     });
   

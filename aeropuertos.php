@@ -15,8 +15,7 @@
         width:250px;
         height:40px;
         position: absolute;
-        top: 130px;
-        right: 5px;
+        top: 490px;
         padding: 5px;
         
         background-color: white;
