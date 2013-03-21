@@ -1,8 +1,9 @@
 // ----------------------------------------------------------------------
 /**
- * Se le pasan dos puntos (lat,lon)
+ * Se le pasan dos puntos del tipo LatLng(lat,lon)
  */
-function distancia(punto1, punto2)
+// ----------------------------------------------------------------------
+function distancia2(punto1, punto2)
 {
     lon1= punto1.lng().toString();
     lat1= punto1.lat().toString();
@@ -24,6 +25,22 @@ function distancia(punto1, punto2)
     return d.toFixed(3);                      //Retorna tres decimales
 }
 
+
+/**
+ * Se le pasan dos puntos del tipo LatLng(lat,lon)
+ */
+// ----------------------------------------------------------------------
+function distancia(punto1,punto2)
+{
+    // Para usar el cálculo de distancia de google maps.
+    // Ese necesario cargar la librería geometry
+    // http://maps.googleapis.com/maps/api/js?key=&sensor=false&libraries=geometry">
+    
+    return (google.maps.geometry.spherical.computeDistanceBetween(punto1,punto2)/1000).toFixed(2);
+}
+
+
+
 // ----------------------------------------------------------------------
 function toggleBounce(nombreMarcador)
 {
@@ -33,20 +50,42 @@ function toggleBounce(nombreMarcador)
         nombreMarcador.setAnimation(google.maps.Animation.BOUNCE);
 }
 
+
 //------------------------------------------------------------------------
-function crearMarcador(posicion, titulo)
+function crearMarcador(posicion,titulo,tipo)
 {
+    // tipo: origen, destino, defecto
+    // Ruta de iconos de google maps.
+    // https://sites.google.com/site/gmapicons/home
+    switch(tipo)
+    {
+        case 'origen':
+            icono='http://www.google.com/mapfiles/dd-start.png';
+            break;
+        case 'destino':
+            icono='http://www.google.com/mapfiles/dd-end.png';
+            break;
+        default:
+            icono='http://www.google.com/mapfiles/marker.png';
+    }
+    
     var marcador = new google.maps.Marker(
     {
         map: mapa,
         draggable: false,
         //animation: google.maps.Animation.DROP,
         position: posicion,
-        title: titulo 
+        title: titulo,
+        icon: icono,
+        shadow: icono
     });   
+
+    crearInfo(titulo,marcador);
 
     return marcador;
 }
+
+
 
 //------------------------------------------------------------------------
 function dibujarRuta(rutadepuntos)
@@ -60,8 +99,10 @@ function dibujarRuta(rutadepuntos)
         strokeOpacity: 1.0,
         strokeWeight: 2      
     });   
-
 }
+
+
+
 //------------------------------------------------------------------------
 function crearInfo(contenido,marcador)
 {
@@ -82,6 +123,8 @@ function crearInfo(contenido,marcador)
     
 }
 
+
+
 //----------------------------------------------------------------------
 function puntoMedio(punto1,punto2)
 {
@@ -96,9 +139,42 @@ function puntoMedio(punto1,punto2)
     return new google.maps.LatLng(latMedio,lonMedio);
 }
 
-// ----------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------
+function infoVuelo(origen,destino)
+{
+    // origen y destino son marcadores -> objetos de tipo Marker.
+    var velocidadAvion=850; // 850km/h de media de velocidad
+    var maniobras=20; // 20 minutos para despegue y aterrizaje.
+    
+    // Calculamos el tiempo en minutos para recorrer los dos puntos.
+    var tiempoMinutos= ( distancia(origen.getPosition(),destino.getPosition()) * 60 / velocidadAvion) + maniobras;
+    
+    horas = Math.floor(tiempoMinutos/60);
+    minutos = Math.round(tiempoMinutos%60);
+    
+    mensaje= origen.getTitle()+" --> "+destino.getTitle()+": <b>"+distancia(origen.getPosition(),destino.getPosition())+"</b> km.<br/>Duración: <b>"+horas+"</b> horas y <b>"+minutos+"</b> minutos.";
+    
+    
+    return mensaje;
+}
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function()
 {
+    $("#infomapa").fadeTo(0,0);
+    
     // Latitud NORTE(valores +) |ecuador| SUR(valores -)
     // Longitud OESTE(valores -) |Meridiano Greenwich| ESTE (valores +) 
     // Creamos dos puntos geográficos (latitud,longitud).
@@ -107,11 +183,12 @@ $(document).ready(function()
     var nyork = new google.maps.LatLng(40.7143528,-74.0059731);
     var miami = new google.maps.LatLng(25.7889689,-80.2264393);
     
+    
     // Definimos las opciones de mapa en un objeto de tipo MapOptions
     // https://developers.google.com/maps/documentation/javascript/reference#MapOptions
     var opcionesMapa ={
         center: instituto,
-        zoom: 17,
+        zoom: 3,
         mapTypeId: google.maps.MapTypeId.ROADMAP    
     };
     
@@ -128,34 +205,48 @@ $(document).ready(function()
     mapa = new google.maps.Map($("#mimapa")[0],opcionesMapa);
     
     
-    // Creamos un objeto de tipo Market en el instituto.
-    var marcaInstituto = crearMarcador(instituto,'IES San Clemente');
-    var marcaMadrid = crearMarcador(madrid,'Madrid');
     
-    crearInfo('Madrid capital de España',marcaMadrid);
-
-
+    // Creamos dos marcas.
+    var mMadrid = crearMarcador(madrid,'Madrid','origen');
+    var mNyork = crearMarcador(nyork,'Nueva York','destino');
+    
+    // Ejemplo de crearInfo:
+    //crearInfo('Madrid capital de España',marcaMadrid);
+    
     // Cambiamos el zoom del mapa.
-    mapa.setZoom(6);
-
+    // mapa.setZoom(3);
 
     // Programamos que al hacer click en el marcador
     // del instituto haga una animación.
-    google.maps.event.addListener(marcaInstituto,'click',function(){
-        toggleBounce(marcaInstituto);
-    });
+    // google.maps.event.addListener(marcaInstituto,'click',function(){
+    //    toggleBounce(marcaInstituto);
+    //    });
     
-   
-
     // Dibujamos una linea entre Instituto y Madrid.
-    var linea = dibujarRuta([instituto, madrid]);
+    var linea = dibujarRuta([madrid,nyork]);
     
     // Centramos el mapa en el punto medio entre el instituto y Madrid.
-    mapa.setCenter(puntoMedio(instituto,madrid));
+    mapa.setCenter(puntoMedio(madrid,nyork));
     
   
-    mensaje="<p>La distancia entre el Instituto y Madrid es de "+distancia(instituto,madrid)+" Km.</p>";
-    
-    $("#opciones").html(mensaje);
+    // Programamos la acción de click sobre el botón #info.
+    $("#info").click(function()
+    {
+        // Ponemos el contenido en infomapa.
+        $("#infomapa").html(infoVuelo(mMadrid,mNyork));
+       
+        $("#infomapa").fadeTo(800,1,function()
+        {
+            $(this).delay(1800).fadeTo(600,0);
+        });
+    });
+  
+  
+  
+  
+  
+  
+  
+  
     
 });  // document.ready.
