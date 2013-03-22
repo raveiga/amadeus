@@ -333,9 +333,6 @@ class Basedatos {
 
         return "Se han realizados los cambios correctamente.";
     }
-    
-    
-    
 
     //----------------------------------------------------------------------------------------------------
     /**
@@ -361,9 +358,6 @@ class Basedatos {
         return true;
     }
 
-    
-    
-    
     //----------------------------------------------------------------------------------------------------
     /**
      * Función borrarFoto
@@ -387,8 +381,6 @@ class Basedatos {
         return true;
     }
 
-    
-    
     //----------------------------------------------------------------------------------------------------
     /**
      * Función borrarUsuario
@@ -408,16 +400,51 @@ class Basedatos {
         $stmt->execute();
 
         if (isset($_SESSION['fotografia']) && $_SESSION['fotografia'] != '') {
-            
+
             // Directorio de envío de imágenes.
-            $directorioImagenes = substr(__FILE__, 0, strlen(__FILE__) - strlen(basename(__FILE__))-4) . 'img/usuarios/';
+            $directorioImagenes = substr(__FILE__, 0, strlen(__FILE__) - strlen(basename(__FILE__)) - 4) . 'img/usuarios/';
             $rutaFicheroAvatar = $directorioImagenes . $_SESSION['fotografia'];
-            
+
             // Borramos el fichero de imagen del usuario
             unlink($rutaFicheroAvatar);
         }
-        
+
         return 'OK';
+    }
+
+    public function obtenerAeropuertos($latNE = '', $lonNE = '', $latSW = '', $lonSW = '') {
+        if ($latNE != '') {
+            // Preparamos la consulta
+            $stmt = self::$_mysqli->prepare("select id,aeropuerto,ciudad,pais,iata,icao,latitud,longitud,elevacion from amadeus_aeropuertos where latitud<=? and latitud>=? and longitud<=? and longitud>=?") or die(self::$_mysqli->error);
+
+            $stmt->bind_param("dddd", $latNE, $latSW, $lonNE, $lonSW);
+        } else {
+            // Preparamos la consulta
+            $stmt = self::$_mysqli->prepare("select id,aeropuerto,ciudad,pais,iata,icao,latitud,longitud,elevacion from amadeus_aeropuertos") or die(self::$_mysqli->error);
+        }
+
+
+        // Ejecutamos la consulta
+        $stmt->execute();
+
+        // Almacenamos los resultados.
+        $stmt->bind_result($id, $aeropuerto, $ciudad, $pais, $iata, $icao, $latitud, $longitud, $elevacion);
+
+        // Creamos el array de resultados.
+        $datos = Array();
+
+        // Leemos las filas del recordset.
+        while ($fila = $stmt->fetch()) {
+            $datos[$id] = array("id" => $id, "aeropuerto" => $aeropuerto, "ciudad" => $ciudad, "pais" => $pais, "iata" => $iata, "icao" => $icao, "latitud" => $latitud, "longitud" => $longitud, "elevacion" => $elevacion);
+        }
+
+        // Liberamos espacio del recordset
+        $stmt->free_result();
+
+        // Devolvemos el array en formato JSON.
+        return json_encode($datos);
+
+        // Liberamos espacio
     }
 
 }

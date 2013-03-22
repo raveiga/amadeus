@@ -52,7 +52,7 @@ function toggleBounce(nombreMarcador)
 
 
 //------------------------------------------------------------------------
-function crearMarcador(posicion,titulo,tipo)
+function crearMarcador(posicion,titulo,informacion,tipo)
 {
     // tipo: origen, destino, defecto
     // Ruta de iconos de google maps.
@@ -80,7 +80,7 @@ function crearMarcador(posicion,titulo,tipo)
         shadow: icono
     });   
 
-    crearInfo(titulo,marcador);
+    crearInfo(informacion,marcador);
 
     return marcador;
 }
@@ -108,18 +108,18 @@ function crearInfo(contenido,marcador)
 {
     var informacion= new google.maps.InfoWindow(
     {
-        maxWidth: 120,
         content: contenido
     });
     
-    google.maps.event.addListener(marcador,'mouseover',function(){
+    google.maps.event.addListener(marcador,'click',function(){
         informacion.open(mapa,marcador);
     });
    
-    google.maps.event.addListener(marcador,'mouseout',function(){
+/*
+   google.maps.event.addListener(marcador,'mouseout',function(){
         informacion.close();
     });
-    
+     */ 
     
 }
 
@@ -162,6 +162,49 @@ function infoVuelo(origen,destino)
 
 
 
+//----------------------------------------------------------------------
+function cargarPuntos()
+{
+    // Averiguamos las coordenadas del zoom actual del mapa.
+    // Nos devuelve coordenadas superiorDerecha e inferiorIzquierda.
+    limitesMapa=mapa.getBounds();
+    
+    latNE=limitesMapa.getNorthEast().lat().toString();
+    lonNE=limitesMapa.getNorthEast().lng().toString();
+    latSW=limitesMapa.getSouthWest().lat().toString();
+    lonSW=limitesMapa.getSouthWest().lng().toString();
+        
+        
+    $.post("peticiones.php?op=7",{latNE:latNE,lonNE:lonNE,latSW:latSW,lonSW:lonSW},function(resultado)
+    {
+        // Evaluamos el objeto JSON recibido.
+        var aeropuertos=jQuery.parseJSON(resultado);
+           
+        // Recorremos el array recibido. Cada posición contiene un objeto con todas las propiedades que enviamos en la base de datos.
+        // Recorremos ese array de aeropuertos.
+        // En index tenemos el índice de cada posición del array y que es igual al id del aeropuerto, y en datos el objeto con los valores del aeropuerto.
+        $.each(aeropuertos,function(index,datos){
+                
+            // Comprobamos si ya hemos cargado previamente ese punto en el mapa.
+            // Si no está cargado lo creamos y lo anotamos en el array marcadores.
+            if (!marcadores[index]) // Si ese marcador no existe lo añadimos
+            {
+                var posicion= new google.maps.LatLng(datos.latitud,datos.longitud);
+                var titulo= datos.aeropuerto;
+                var informacion ='<div style="font-size:smaller; width:380px;height:150px"><h4>Aeropuerto: '+datos.icao+'</h4>'+
+                '<p><b>'+datos.aeropuerto+'</b>,<br/>Situado en la ciudad de <b>'+datos.ciudad+'</b> en <b>'+datos.pais+'.</b><br/>'+
+                'Coord.: ('+datos.latitud+','+datos.longitud+') --- Elevacion: '+datos.elevacion+' m.'+
+                '<br/>IATA: <b>'+datos.iata+'</b> --- ICAO: <b>'+datos.icao+'</b></div>';
+               
+                // Colocamos el marcador en el mapa.
+                var marcador= crearMarcador(posicion,titulo,informacion,'');
+
+                // Anotamos en el array marcadores (ponemos a true esa posición), el nuevo marcador colocado en el mapa.
+                marcadores[index]=true;
+            } 
+        }); // $.each
+    }); // $.post    
+}
 
 
 
@@ -174,6 +217,9 @@ function infoVuelo(origen,destino)
 $(document).ready(function()
 {
     $("#infomapa").fadeTo(0,0);
+    
+    // Array para controlar los marcadores que vamos situando en el mapa.
+    marcadores=[];
     
     // Latitud NORTE(valores +) |ecuador| SUR(valores -)
     // Longitud OESTE(valores -) |Meridiano Greenwich| ESTE (valores +) 
@@ -207,8 +253,8 @@ $(document).ready(function()
     
     
     // Creamos dos marcas.
-    var mMadrid = crearMarcador(madrid,'Madrid','origen');
-    var mNyork = crearMarcador(nyork,'Nueva York','destino');
+    var mMadrid = crearMarcador(madrid,'Madrid','Capital de España','origen');
+    var mNyork = crearMarcador(nyork,'Nueva York','Bonita ciudad','destino');
     
     // Ejemplo de crearInfo:
     //crearInfo('Madrid capital de España',marcaMadrid);
@@ -242,11 +288,13 @@ $(document).ready(function()
     });
   
   
+    // Al hacer click en el botón aeropuertos, cargamos los puntos de los aeropuertos.
+    $("#aeropuertos").click(function()
+    {
+        cargarPuntos();
+    }); // click aeropuertos.
   
   
   
   
-  
-  
-    
 });  // document.ready.

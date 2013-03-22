@@ -40,7 +40,11 @@ switch ($_GET['op']){
     case 6: // Borrado de usuario y fotografías en el servidor.
         echo $mibase->borrarUsuario();
         break;
-    
+  
+    case 7: // Petición ajax de carga de aeropuertos.
+        echo $mibase->obtenerAeropuertos($_POST['latNE'],$_POST['lonNE'],$_POST['latSW'],$_POST['lonSW']);
+        break;
+  
  }
 
 ?>

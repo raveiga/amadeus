@@ -15,7 +15,7 @@
         width:250px;
         height:40px;
         position: absolute;
-        top: 490px;
+        top: 495px;
         padding: 5px;
         
         background-color: white;
@@ -37,7 +37,7 @@
             <div>
                 <p class="bottom">
                     <input type="button" name="info" id="info" value="Mostrar Info. Ruta"/>
-                    <input type="button" name="boton" id="boton" value="Cargar Aeropuertos"/>
+                    <input type="button" name="aeropuertos" id="aeropuertos" value="Cargar Aeropuertos"/>
                 </p>
             </div>
             <div id="opciones"></div>
