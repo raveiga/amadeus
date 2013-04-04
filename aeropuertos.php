@@ -51,11 +51,11 @@
     }
 
     #infovuelos{
-        width:600px;
+        width:650px;
         height:300px;
         position: absolute;
         top: 150px;
-        left:150px;
+        left:130px;
         padding: 5px;
         background-color: white;
         border: 1px solid #A6A6A6;
@@ -65,6 +65,8 @@
         white-space: nowrap;
         font-size: smaller;
         z-index:99;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     #infovuelos h3{
@@ -89,7 +91,7 @@
                     <input type="button" name="aeropuertos" id="aeropuertos" value="Cargar Aeropuertos"/><br/><br/>
 
                     Origen: <input type="radio" name="desde" id="dorigen" value="origen" checked />Destino: <input type="radio" name="desde" id="ddestino" value="destino" />
-                    Salidas: <input type="radio" name="tipo" id="tiposalidas" value="salidas" checked />Llegadas: <input type="radio" name="tipo" id="tipollegadas" value="llegadas"/>
+                    Salidas: <input type="radio" name="tipo" id="tiposalidas" value="salidas" />Llegadas: <input type="radio" name="tipo" id="tipollegadas" value="llegadas" checked />
                     <input type="button" name="vuelos" id="vuelos" value="Vuelos en Tiempo Real"/><br/><br/>
 
                     <input type="button" name="geolocalizar" id="geolocalizar" value="Geolocalizame !"/>

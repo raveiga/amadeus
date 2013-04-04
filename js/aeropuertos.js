@@ -47,26 +47,29 @@ function toggleBounce(nombreMarcador)
     if (nombreMarcador.getAnimation() != null)
         nombreMarcador.setAnimation(null);
     else
-    nombreMarcador.setAnimation(google.maps.Animation.BOUNCE);
-    }
+        nombreMarcador.setAnimation(google.maps.Animation.BOUNCE);
+}
 
 
-    //------------------------------------------------------------------------
-    function crearMarcador(posicion,titulo,informacion,tipo)
-    {
+//------------------------------------------------------------------------
+function crearMarcador(posicion,titulo,informacion,tipo)
+{
     // tipo: origen, destino, defecto
     // Ruta de iconos de google maps.
     // https://sites.google.com/site/gmapicons/home
     switch(tipo)
     {
-    case 'origen':
-    icono='http://www.google.com/mapfiles/dd-start.png';
-    break;
-    case 'destino':
-    icono='http://www.google.com/mapfiles/dd-end.png';
-    break;
-    default:
-    icono='http://www.google.com/mapfiles/marker.png';
+        case 'origen':
+            icono='http://www.google.com/mapfiles/dd-start.png';
+            break;
+        case 'destino':
+            icono='http://www.google.com/mapfiles/dd-end.png';
+            break;
+        case 'avion':
+            icono='img/avion.png';
+            break;
+        default:
+            icono='http://maps.google.com/mapfiles/arrow.png';
     }
     
     var marcador = new google.maps.Marker(
@@ -78,18 +81,18 @@ function toggleBounce(nombreMarcador)
         title: titulo,
         icon: icono,
         shadow: icono
-        });   
+    });   
 
     crearInfo(informacion,marcador);
 
     return marcador;
-    }
+}
 
 
 
-    //------------------------------------------------------------------------
-    function dibujarRuta(rutadepuntos)
-    {
+//------------------------------------------------------------------------
+function dibujarRuta(rutadepuntos)
+{
     return  new google.maps.Polyline(
     {
         map: mapa,
@@ -98,36 +101,36 @@ function toggleBounce(nombreMarcador)
         strokeColor: "FF0000",
         strokeOpacity: 1.0,
         strokeWeight: 2      
-        });   
-    }
+    });   
+}
 
 
 
-    //------------------------------------------------------------------------
-    function crearInfo(contenido,marcador)
-    {
+//------------------------------------------------------------------------
+function crearInfo(contenido,marcador)
+{
     var informacion= new google.maps.InfoWindow(
     {
         content: contenido
-        });
+    });
     
     google.maps.event.addListener(marcador,'click',function(){
         informacion.open(mapa,marcador);
-        });
+    });
    
-    /*
+/*
    google.maps.event.addListener(marcador,'mouseout',function(){
         informacion.close();
     });
      */ 
     
-    }
+}
 
 
 
-    //----------------------------------------------------------------------
-    function puntoMedio(punto1,punto2)
-    {
+//----------------------------------------------------------------------
+function puntoMedio(punto1,punto2)
+{
     lon1=parseFloat(punto1.lng().toString());
     lat1=parseFloat(punto1.lat().toString());
     lon2=parseFloat(punto2.lng().toString());
@@ -137,13 +140,13 @@ function toggleBounce(nombreMarcador)
     lonMedio=(lon1 + lon2)/2;
     
     return new google.maps.LatLng(latMedio,lonMedio);
-    }
+}
 
 
 
-    //----------------------------------------------------------------------
-    function infoVuelo(origen,destino)
-    {
+//----------------------------------------------------------------------
+function infoVuelo(origen,destino)
+{
     // origen y destino son marcadores -> objetos de tipo Marker.
     var velocidadAvion=850; // 850km/h de media de velocidad
     var maniobras=20; // 20 minutos para despegue y aterrizaje.
@@ -158,13 +161,13 @@ function toggleBounce(nombreMarcador)
     
     
     return mensaje;
-    }
+}
 
 
 
-    //----------------------------------------------------------------------
-    function cargarPuntos()
-    {
+//----------------------------------------------------------------------
+function cargarPuntos()
+{
     // Averiguamos las coordenadas del zoom actual del mapa.
     // Nos devuelve coordenadas superiorDerecha e inferiorIzquierda.
     limitesMapa=mapa.getBounds();
@@ -180,60 +183,201 @@ function toggleBounce(nombreMarcador)
         lonNE:lonNE,
         latSW:latSW,
         lonSW:lonSW
-        },function(resultado)
+    },function(resultado)
 
-        {
-        // Evaluamos el objeto JSON recibido.
-        var aeropuertos=jQuery.parseJSON(resultado);
+    {
+            // Evaluamos el objeto JSON recibido.
+            var aeropuertos=jQuery.parseJSON(resultado);
            
-        // Recorremos el array recibido. Cada posición contiene un objeto con todas las propiedades que enviamos en la base de datos.
-        // Recorremos ese array de aeropuertos.
-        // En index tenemos el índice de cada posición del array y que es igual al id del aeropuerto, y en datos el objeto con los valores del aeropuerto.
-        $.each(aeropuertos,function(index,datos){
+            // Recorremos el array recibido. Cada posición contiene un objeto con todas las propiedades que enviamos en la base de datos.
+            // Recorremos ese array de aeropuertos.
+            // En index tenemos el índice de cada posición del array y que es igual al id del aeropuerto, y en datos el objeto con los valores del aeropuerto.
+            $.each(aeropuertos,function(index,datos){
                 
-            // Comprobamos si ya hemos cargado previamente ese punto en el mapa.
-            // Si no está cargado lo creamos y lo anotamos en el array marcadores.
-            if (!marcadores[index]) // Si ese marcador no existe lo añadimos
-            {
-            var posicion= new google.maps.LatLng(datos.latitud,datos.longitud);
-            var titulo= datos.aeropuerto;
-            var informacion ='<div style="font-size:smaller; width:380px;height:150px"><h4>Aeropuerto: '+datos.icao+'</h4>'+
-            '<p><b>'+datos.aeropuerto+'</b>,<br/>Situado en la ciudad de <b>'+datos.ciudad+'</b> en <b>'+datos.pais+'.</b><br/>'+
-            'Coord.: ('+datos.latitud+','+datos.longitud+') --- Elevacion: '+datos.elevacion+' m.'+
-            '<br/>IATA: <b>'+datos.iata+'</b> --- ICAO: <b>'+datos.icao+'</b></div>';
+                // Comprobamos si ya hemos cargado previamente ese punto en el mapa.
+                // Si no está cargado lo creamos y lo anotamos en el array marcadores.
+                if (!marcadores[index]) // Si ese marcador no existe lo añadimos
+                {
+                    var posicion= new google.maps.LatLng(datos.latitud,datos.longitud);
+                    var titulo= datos.aeropuerto;
+                    var informacion ='<div style="font-size:smaller; width:380px;height:150px"><h4>Aeropuerto: '+datos.icao+'</h4>'+
+                    '<p><b>'+datos.aeropuerto+'</b>,<br/>Situado en la ciudad de <b>'+datos.ciudad+'</b> en <b>'+datos.pais+'.</b><br/>'+
+                    'Coord.: ('+datos.latitud+','+datos.longitud+') --- Elevacion: '+datos.elevacion+' m.'+
+                    '<br/>IATA: <b>'+datos.iata+'</b> --- ICAO: <b>'+datos.icao+'</b></div>';
                
-            // Colocamos el marcador en el mapa.
-            var marcador= crearMarcador(posicion,titulo,informacion,'');
+                    // Colocamos el marcador en el mapa.
+                    var marcador= crearMarcador(posicion,titulo,informacion,'');
 
-            // Anotamos en el array marcadores (ponemos a true esa posición), el nuevo marcador colocado en el mapa.
-            marcadores[index]=true;
-            } 
+                    // Anotamos en el array marcadores (ponemos a true esa posición), el nuevo marcador colocado en el mapa.
+                    marcadores[index]=true;
+                } 
             }); // $.each
         }); // $.post    
-    }
+}
 
 
-    //------------------------------------------------------------------------
-    function geolocalizar()
-    {
+//------------------------------------------------------------------------
+function geolocalizar()
+{
     // Intenta primero localizacion usando W3C
     if (navigator.geolocation)
     {
-    navigator.geolocation.getCurrentPosition(function(posicion)
-    {
-        posicionInicial=new google.maps.LatLng(posicion.coords.latitude,posicion.coords.longitude);
-        mapa.setCenter(posicionInicial);
-        crearMarcador(posicionInicial,'Estas aqui.','Tus coordenadas: ('+posicion.coords.latitude+","+posicion.coords.longitude+")",'');
+        navigator.geolocation.getCurrentPosition(function(posicion)
+        {
+            posicionInicial=new google.maps.LatLng(posicion.coords.latitude,posicion.coords.longitude);
+            mapa.setCenter(posicionInicial);
+            crearMarcador(posicionInicial,'Estas aqui.','Tus coordenadas: ('+posicion.coords.latitude+","+posicion.coords.longitude+")",'');
              
         });
     }
     else // Tu navegador no soporta geolocalizacion.
     {
-    alert("Fallo en Localización.");
-    // Situamos al usuario en Madrid por ejemplo.
-    mapa.setCenter(madrid);
+        alert("Fallo en Localización.");
+        // Situamos al usuario en Madrid por ejemplo.
+        mapa.setCenter(madrid);
+    }
 }
-}
+
+
+//----------------------------------------------------------------------
+function vuelosTiempoReal(desde,tipo)
+{
+    // Desde puede ser origen o destino.
+    // Tipo puede ser salidas o llegadas.
+    codigoIATA=null;
+ 
+    if (desde=='origen' && $('#origen').val()!='')
+        codigoIATA= iataOrigen;
+    else if (desde=='destino' && $('#destino').val()!='')
+        codigoIATA= iataDestino;
+    
+    
+    if (tipo=='salidas')
+        formato='out';
+    else
+        formato='in';
+
+
+    if (codigoIATA!=null)
+    {
+        $.post("peticiones.php?op=9",{ iata:codigoIATA, tipo:formato }, function(resultado)
+
+        {
+            vuelos=jQuery.parseJSON(resultado);
+            
+            if (tipo=='llegadas')
+            {
+                listado="<h3>Llegadas previstas al aeropuerto "+codigoIATA+".</h3><img id='cruz' src='img/css/icons/error.png'/>";
+                listado+="<table border='1'><thead><th>Callsign</th><th>Vuelo</th><th>Procedencia</th><th>Tipo</th><th>Tiempo Estimado Llegada</th></thead>"; 
+                $.each(vuelos.flights, function(index, valores)
+                {
+/* JSON de llegadas:
+{"flights":[{"callsign":"RYR7222","iata":"VLC","type":"B738","lat":41.8,"lon":-6.159,"spd":393,"alt":33150,"flight":"FR7222","name":"Valencia","eta":1365084709},{"callsign":"BER81Q","iata":"PMI","type":"A321","lat":40.754,"lon":-3.53,"spd":421,"alt":34950,"flight":"AB7522","name":"Palma de Mallorca Son San Juan","eta":1365085777}]}
+ */
+
+                    horavuelo=new Date((vuelos.flights[index].eta)*1000);
+                    listado+="<tr align='center'><td><a href='#'>"+vuelos.flights[index].callsign+"</a></td><td>"+vuelos.flights[index].flight+"</td><td>"+vuelos.flights[index].name+"</td><td>"+vuelos.flights[index].type+"</td><td>"+horavuelo.getHours()+":"+horavuelo.getMinutes()+"</td></tr>";
+                });
+                
+                // Cubrimos el div infovuelos y mostramos en pantalla.
+                $("#infovuelos").html(listado).fadeTo(1,1); 
+                
+                // Programamos el evento sobre el click.
+                $("#cruz").click(function()
+                {
+                    $("#infovuelos").hide();
+                });
+            
+                // Programamos el evento de hacer click son el código del avión, para que lo sitúe en su posición actual.
+                $("#infovuelos a").click(function()
+                {
+                    // Averiguamos la fila dónde hemos hecho click en base a los hiperenlaces hijos.
+                    var numfila=$("#infovuelos table tr a").index($(this));
+
+                    
+                    var callsign=vuelos.flights[numfila].callsign;
+                    var procedencia=vuelos.flights[numfila].name;
+                    var destino=codigoIATA;
+                    var tipoavion=vuelos.flights[numfila].type;
+                    var altura=vuelos.flights[numfila].alt;
+                    var velocidad=vuelos.flights[numfila].spd;
+                    var latitud=vuelos.flights[numfila].lat;
+                    var longitud=vuelos.flights[numfila].lon;
+                    var horavuelo= new Date((vuelos.flights[numfila].eta)*1000);
+                    var eta=horavuelo.getHours()+":"+horavuelo.getMinutes();
+                    
+                    // Posicionamos el avión en el mapa.
+                    posicionarAvion(callsign,procedencia,destino,tipoavion,altura,velocidad,eta,longitud,latitud);
+                });
+            }  // tipo == llegadas.
+            
+            else
+            {
+                listado="<h3>Salidas previstas desde el aeropuerto "+codigoIATA+".</h3><img id='cruz' src='img/css/icons/error.png'/>";
+                listado+="<table border='1'><thead><th>Callsign</th><th>Vuelo</th><th>Destino</th><th>Tipo</th></thead>";
+                $.each(vuelos.flights, function(index, valores)
+                {
+/* JSON de salidas:
+{"flights":[{"callsign":"RYR724","iata":"PMI","type":"B738","lat":42.519,"lon":-3.493,"spd":445,"alt":36000,"flight":"FR724","name":"Palma de Mallorca Son San Juan","eta":1365086556}]}
+*/ 
+                    listado+="<tr align='center'><td>"+vuelos.flights[index].callsign+"</td><td>"+vuelos.flights[index].flight+"</td><td>"+vuelos.flights[index].name+"</td><td>"+vuelos.flights[index].type+"</td></tr>";
+        
+                });
+                
+                // Cubrimos el div infovuelos y mostramos en pantalla.
+                $("#infovuelos").html(listado).fadeTo(1,1); 
+                
+                // Programamos el evento sobre el click.
+                $("#cruz").click(function()
+                {
+                    $("#infovuelos").hide();
+                });
+                
+            } // else
+        });   // $.post
+    }
+    else
+        alert("Atención: tiene que seleccionar algún aeropuerto en Origen o Destino,\n\n              para ver los vuelos en Tiempo Real.");
+  
+} // función vuelosTiempoReal
+
+
+
+
+//----------------------------------------------------------------------
+function  posicionarAvion(callsign,procedencia,destino,tipoavion,altura,velocidad,eta,longitud,latitud)
+{
+    $("#infovuelos").hide();
+    if (marcadorAvion!=null)
+        marcadorAvion.setMap(null);
+    
+    var posicion=new google.maps.LatLng(latitud,longitud);
+    var titulo='Avión '+callsign+' modelo '+tipoavion+', procedente de '+procedencia+' y destino a '+destino+'.';  
+    var informacion=titulo+"<br/><br/><b>Velocidad de crucero:</b> "+velocidad+" nudos ("+(velocidad*1.852).toFixed(0)+" Km/h).";
+    informacion+="<br/><b>Altura:</b> "+altura+" pies ("+(altura*0.30480).toFixed(0)+" metros).";
+    informacion+="<br/><b>Hora estimada de llegada:</b> "+eta+".";
+    
+    marcadorAvion=crearMarcador(posicion,titulo,informacion,'avion');
+    mapa.setCenter(posicion);
+    mapa.setZoom(7);
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -245,6 +389,7 @@ function toggleBounce(nombreMarcador)
 $(document).ready(function()
 {
     $("#infomapa").fadeTo(0,0);
+    $("#infovuelos").hide();
     
     // Array para controlar los marcadores que vamos situando en el mapa.
     marcadores=[];
@@ -254,6 +399,13 @@ $(document).ready(function()
     pOrigen=null;
     pDestino=null;
     linea=null;
+    
+    // Nos servirán para almacenar los códigos de los aeropuertos de origen y destino marcados en el mapa.
+    iataOrigen=null;
+    iataDestino=null;
+    
+    // Variable para posicionarAvión.
+    marcadorAvion=null;
     
     // Latitud NORTE(valores +) |ecuador| SUR(valores -)
     // Longitud OESTE(valores -) |Meridiano Greenwich| ESTE (valores +) 
@@ -394,6 +546,9 @@ $(document).ready(function()
                     
                         // Que ponga zoom del mapa a 4.
                         mapa.setZoom(4);
+                        
+                        // Almacenamos en la variable global el código del aeropuerto de Origen.
+                        iataOrigen=aeropuertos[posiciondeclick].iata;
                     }
                     else // hemos hecho click en la casilla de destino.
                     {
@@ -411,6 +566,9 @@ $(document).ready(function()
                     
                         // Que ponga zoom del mapa a 4.
                         mapa.setZoom(4);
+                        
+                        // Almacenamos en la variable global el código del aeropuerto de Destino.
+                        iataDestino=aeropuertos[posiciondeclick].iata;
                     } 
                  
                     // Si tenemos origen y destino, dibujamos la ruta
@@ -450,6 +608,12 @@ $(document).ready(function()
     // O también se puede hacer la llamada de la siguiente forma:
     // $("#geolocalizar").click(geolocalizar);
   
+  
+    $("#vuelos").click(function()
+    {
+        // Se le pasa desde(origen,destino) y tipo(salidas,llegadas)
+        vuelosTiempoReal( $('input[name=desde]:checked').val() , $('input[name=tipo]:checked').val() );
+    });
   
   
 });  // document.ready.
