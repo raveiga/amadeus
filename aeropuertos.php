@@ -61,8 +61,9 @@
                     Destino: <input type="text" name="destino" id="destino"/>
                     <input type="button" name="info" id="info" value="Mostrar Info. Ruta"/>
                     <input type="button" name="aeropuertos" id="aeropuertos" value="Cargar Aeropuertos"/>
-                    <input type="button" name="extra" id="extra" value="Extra Info"/>
-                    <input type="button" name="geolocalizar" id="geolocalizar" value="Geolocalización"/>
+                    <input type="button" name="salidas" id="salidas" value="Salidas T. Real Origen"/>
+                    <input type="button" name="llegadas" id="llegadas" value="Llegadas T. Real Destino"/>
+                    <input type="button" name="geolocalizar" id="geolocalizar" value="Geolocalizame !"/>
                 </p>
             </div>
             <div id="zonasugerencias"></div>
