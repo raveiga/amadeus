@@ -27,23 +27,6 @@
         z-index:99;
     }
 
-    #infovuelos{
-        width:600px;
-        height:300px;
-        position: absolute;
-        top: 150px;
-        left:150px;
-        padding: 5px;
-        background-color: white;
-        border: 1px solid #A6A6A6;
-        box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-        padding: 10px;
-        vertical-align: middle;
-        white-space: nowrap;
-        font-size: smaller;
-        z-index:99;
-    }
-
     #zonasugerencias{
         position: absolute;
         z-index: 30;
@@ -65,6 +48,31 @@
 
     li{
         list-style: none;
+    }
+
+    #infovuelos{
+        width:600px;
+        height:300px;
+        position: absolute;
+        top: 150px;
+        left:150px;
+        padding: 5px;
+        background-color: white;
+        border: 1px solid #A6A6A6;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        vertical-align: middle;
+        white-space: nowrap;
+        font-size: smaller;
+        z-index:99;
+    }
+
+    #infovuelos h3{
+        width: 300px;
+        float:left;
+    }
+    #cruz{
+        float: right; 
     }
 </style> 
 
