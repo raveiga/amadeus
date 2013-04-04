@@ -31,7 +31,7 @@
         position: absolute;
         z-index: 30;
     }
-    
+
     .enlace_sugerencia_over {
         background-color: #3366CC;
     }
@@ -59,10 +59,14 @@
                 <p class="bottom">
                     Origen: <input type="text" name="origen" id="origen"/>
                     Destino: <input type="text" name="destino" id="destino"/>
-                    <input type="button" name="info" id="info" value="Mostrar Info. Ruta"/>
-                    <input type="button" name="aeropuertos" id="aeropuertos" value="Cargar Aeropuertos"/>
-                    <input type="button" name="salidas" id="salidas" value="Salidas T. Real Origen"/>
-                    <input type="button" name="llegadas" id="llegadas" value="Llegadas T. Real Destino"/>
+                    <input type="button" name="info" id="info" value="Mostrar Info. Ruta"/><br/><br/>
+                    
+                    <input type="button" name="aeropuertos" id="aeropuertos" value="Cargar Aeropuertos"/><br/><br/>
+                    
+                    Origen: <input type="radio" name="tipo" id="tipoorigen" checked />Destino: <input type="radio" name="tipo" id="tipodestino"/>
+                    Salidas: <input type="radio" name="desde" id="tiposalidas" checked />Llegadas: <input type="radio" name="desde" id="tipollegadas"/>
+                    <input type="button" name="vuelos" id="vuelos" value="Vuelos en Tiempo Real"/><br/><br/>
+                    
                     <input type="button" name="geolocalizar" id="geolocalizar" value="Geolocalizame !"/>
                 </p>
             </div>
