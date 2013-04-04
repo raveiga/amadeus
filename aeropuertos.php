@@ -63,8 +63,8 @@
                     
                     <input type="button" name="aeropuertos" id="aeropuertos" value="Cargar Aeropuertos"/><br/><br/>
                     
-                    Origen: <input type="radio" name="tipo" id="tipoorigen" checked />Destino: <input type="radio" name="tipo" id="tipodestino"/>
-                    Salidas: <input type="radio" name="desde" id="tiposalidas" checked />Llegadas: <input type="radio" name="desde" id="tipollegadas"/>
+                    Origen: <input type="radio" name="tipo" id="tipoorigen" value="origen" checked />Destino: <input type="radio" name="tipo" id="tipodestino" value="destino" />
+                    Salidas: <input type="radio" name="desde" id="tiposalidas" valude="salidas" checked />Llegadas: <input type="radio" name="desde" id="tipollegadas" value="llegadas"/>
                     <input type="button" name="vuelos" id="vuelos" value="Vuelos en Tiempo Real"/><br/><br/>
                     
                     <input type="button" name="geolocalizar" id="geolocalizar" value="Geolocalizame !"/>
