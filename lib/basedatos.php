@@ -447,6 +447,39 @@ class Basedatos {
         // Liberamos espacio
     }
 
+    public function sugerirAeropuertos($aeropuerto) {
+        // Preparamos la consulta
+        $stmt = self::$_mysqli->prepare("select aeropuerto,ciudad,pais,iata,latitud,longitud from amadeus_aeropuertos where aeropuerto like ? order by aeropuerto limit 10") or die(self::$_mysqli->error);
+
+        $parametro = "$aeropuerto%";
+        $stmt->bind_param("s", $parametro);
+
+        // Ejecutamos la consulta
+        $stmt->execute();
+
+        // Almacenamos los resultados.
+        $stmt->bind_result($aeropuerto, $ciudad, $pais, $iata, $latitud, $longitud);
+
+        // Creamos el array de resultados.
+        $datos = Array();
+        // Inicializamos contador del array.
+        $contador = 0;
+
+        // Leemos las filas del recordset.
+        while ($fila = $stmt->fetch()) {
+            $datos[$contador] = array("aeropuerto" => $aeropuerto, "ciudad" => $ciudad, "pais" => $pais, "iata" => $iata, "latitud" => $latitud, "longitud" => $longitud);
+            $contador++;
+        }
+
+        // Liberamos espacio del recordset
+        $stmt->free_result();
+
+        // Devolvemos el array en formato JSON.
+        return json_encode($datos);
+
+        // Liberamos espacio
+    }
+
 }
 
 ?>

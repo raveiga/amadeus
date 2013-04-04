@@ -1,4 +1,5 @@
 <?php
+
 // Activamos las variables de sesión.
 @session_start();
 
@@ -14,37 +15,39 @@ require_once("lib/basedatos.php");
 // el constructor es privado en la clase Basedatos.
 $mibase = Basedatos::getInstancia();
 
-switch ($_GET['op']){
+switch ($_GET['op']) {
     case 1:  // Chequear nick
-          echo $mibase->chequearNick($_POST['nick']);
+        echo $mibase->chequearNick($_POST['nick']);
         break;
-    
+
     case 2: // Alta de usuarios
-        echo $mibase->insertarUsuario($_POST['nick'],$_POST['password'],$_POST['nombre'],$_POST['apellidos'],$_POST['dni'],$_POST['email'],$_POST['telefono']);
+        echo $mibase->insertarUsuario($_POST['nick'], $_POST['password'], $_POST['nombre'], $_POST['apellidos'], $_POST['dni'], $_POST['email'], $_POST['telefono']);
         // Enviamos a continuación el correo de registro.
         break;
-    
+
     case 3: // Chequear Inicio sesión
-        echo $mibase->chequearAcceso($_POST['nick'],$_POST['password']);
+        echo $mibase->chequearAcceso($_POST['nick'], $_POST['password']);
         break;
-    
-    
+
+
     case 4: // Obtener los datos del usuario
         echo $mibase->obtenerInfoUsuario();
         break;
-    
+
     case 5: // Actualizamos datos usuario logueado.
-        echo $mibase->actualizarUsuario($_POST['password'],$_POST['nombre'],$_POST['apellidos'],$_POST['dni'],$_POST['email'],$_POST['telefono']);
+        echo $mibase->actualizarUsuario($_POST['password'], $_POST['nombre'], $_POST['apellidos'], $_POST['dni'], $_POST['email'], $_POST['telefono']);
         break;
-    
+
     case 6: // Borrado de usuario y fotografías en el servidor.
         echo $mibase->borrarUsuario();
         break;
-  
-    case 7: // Petición ajax de carga de aeropuertos.
-        echo $mibase->obtenerAeropuertos($_POST['latNE'],$_POST['lonNE'],$_POST['latSW'],$_POST['lonSW']);
-        break;
-  
- }
 
+    case 7: // Petición ajax de carga de aeropuertos.
+        echo $mibase->obtenerAeropuertos($_POST['latNE'], $_POST['lonNE'], $_POST['latSW'], $_POST['lonSW']);
+        break;
+
+    case 8: // Petición ajax de sugerencias de aeropuertos.
+        echo $mibase->sugerirAeropuertos($_POST['aeropuerto']);
+        break;
+}
 ?>
