@@ -309,7 +309,7 @@ function vuelosTiempoReal(desde,tipo)
                     // Posicionamos el avión en el mapa.
                     posicionarAvion(callsign,procedencia,destino,tipoavion,altura,velocidad,eta,longitud,latitud);
                 });
-            }  // tipo == llegadas.
+            }  // llegadas
             
             else
             {
@@ -320,7 +320,7 @@ function vuelosTiempoReal(desde,tipo)
 /* JSON de salidas:
 {"flights":[{"callsign":"RYR724","iata":"PMI","type":"B738","lat":42.519,"lon":-3.493,"spd":445,"alt":36000,"flight":"FR724","name":"Palma de Mallorca Son San Juan","eta":1365086556}]}
 */ 
-                    listado+="<tr align='center'><td>"+vuelos.flights[index].callsign+"</td><td>"+vuelos.flights[index].flight+"</td><td>"+vuelos.flights[index].name+"</td><td>"+vuelos.flights[index].type+"</td></tr>";
+                    listado+="<tr align='center'><td><a href='#'>"+vuelos.flights[index].callsign+"</a></td><td>"+vuelos.flights[index].flight+"</td><td>"+vuelos.flights[index].name+"</td><td>"+vuelos.flights[index].type+"</td></tr>";
         
                 });
                 
@@ -333,7 +333,29 @@ function vuelosTiempoReal(desde,tipo)
                     $("#infovuelos").hide();
                 });
                 
-            } // else
+                // Programamos el evento de hacer click son el código del avión, para que lo sitúe en su posición actual.
+                $("#infovuelos a").click(function()
+                {
+                    // Averiguamos la fila dónde hemos hecho click en base a los hiperenlaces hijos.
+                    var numfila=$("#infovuelos table tr a").index($(this));
+
+                    
+                    var callsign=vuelos.flights[numfila].callsign;
+                    var procedencia=codigoIATA;
+                    var destino=vuelos.flights[numfila].name;
+                    var tipoavion=vuelos.flights[numfila].type;
+                    var altura=vuelos.flights[numfila].alt;
+                    var velocidad=vuelos.flights[numfila].spd;
+                    var latitud=vuelos.flights[numfila].lat;
+                    var longitud=vuelos.flights[numfila].lon;
+                    var horavuelo= new Date((vuelos.flights[numfila].eta)*1000);
+                    var eta=horavuelo.getHours()+":"+horavuelo.getMinutes();
+                    
+                    // Posicionamos el avión en el mapa.
+                    posicionarAvion(callsign,procedencia,destino,tipoavion,altura,velocidad,eta,longitud,latitud);
+                });
+                
+            } // else salidas
         });   // $.post
     }
     else
@@ -359,7 +381,7 @@ function  posicionarAvion(callsign,procedencia,destino,tipoavion,altura,velocida
     
     marcadorAvion=crearMarcador(posicion,titulo,informacion,'avion');
     mapa.setCenter(posicion);
-    mapa.setZoom(7);
+    mapa.setZoom(6);
  }
 
 
