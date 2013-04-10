@@ -9,6 +9,7 @@ header('Expires: Mon, 01 Jan 1973 00:00:00 GMT');
 
 // Cargamos la clase basedatos.
 require_once("lib/basedatos.php");
+require_once("lib/rss.php");
 
 // Creamos el objeto con el patrón diseño Singleton.
 // No podemos usar $mibase= new Basedatos(), por que
@@ -53,5 +54,9 @@ switch ($_GET['op']) {
     case 9: // Petición JSON a flightRadar24.
         echo file_get_contents("http://www.flightradar24.com/AirportInfoService.php?airport={$_POST['iata']}&type={$_POST['tipo']}");
         break;
+    
+    case 10: // Consultas RSS
+        $mirss=new rss($_POST['titulo'],$_POST['url']);
+        echo $mirss->getRSS();
 }
 ?>

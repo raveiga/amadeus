@@ -21,6 +21,7 @@
 	  <li><a href="index.html">Inicio</a></li>
           <li><a href="contactar.html">Contactar</a></li>
           <li><a href="aeropuertos.html">Aeropuertos</a></li>
+          <li><a href="noticias.html">Noticias</a></li>
           <?php
           if (isset($_SESSION['usuario']))
           {

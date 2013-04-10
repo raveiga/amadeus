@@ -1,3 +1,4 @@
+<script type="text/javascript" src="js/noticias.js"></script>
 <style type="text/css">
     #noticias{
         overflow-y: auto;
