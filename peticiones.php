@@ -57,6 +57,6 @@ switch ($_GET['op']) {
     
     case 10: // Consultas RSS
         $mirss=new rss($_POST['titulo'],$_POST['url']);
-        echo $mirss->getRSS();
+        echo $mirss->contenidoRSS();
 }
 ?>
