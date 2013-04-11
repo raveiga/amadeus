@@ -23,7 +23,7 @@
                     <li><a href="editarusuario.html" />Modifique sus datos personales</a></li>
                     <li><a href="subirfoto.html" />Subir Fotografía</a></li>
                     <?php
-                    if (isset($_SESSION['fotografia']) && $_SESSION['fotografia']!='')
+                    if (isset($_SESSION['fotografia']) && $_SESSION['fotografia'] != '')
                         echo '<li><a href="borrarfoto.php" />Borrar Fotografía</a></li>';
                     ?>
                     <li><a href="#" id="bajausuario" />Darse de Baja</a></li>
@@ -47,22 +47,21 @@
             </form>
 
         </div><!--end of grid-6-->
-        
+
         <div class="grid-4 grid">
             <?php
-            if (isset($_SESSION['fotografia']) && $_SESSION['fotografia']!='')
-                echo "<img src='img/usuarios/{$_SESSION['fotografia']}' />";
+            if (isset($_SESSION['fotografia']) && $_SESSION['fotografia'] != '')
+                echo "<img src='img/usuarios/{$_SESSION['fotografia']}' width='250'/>";
             else
                 echo "Foto avatar no disponible.";
-           
             ?>
-            
+
         </div>
-        
-        
-        
-        
-        
+
+
+
+
+
     </div><!--end of grids-->
 
 </div>
