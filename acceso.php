@@ -46,7 +46,17 @@
                             <input type="password" id="password" name="password" required="required" />
                         </td>
                     </tr>
-                   
+                    <tr>
+                        <th>
+                            <label for="password">Autenticación</label>
+                        </th>
+                        <td>
+                            <select id="autenticacion" name="autenticacion">
+                                <option value="local" selected>Amadeus</option>
+                                <option value="ldap">sanclemente.local</option>
+                            </select>
+                        </td>
+                    </tr>                   
 
                 </table>
 
