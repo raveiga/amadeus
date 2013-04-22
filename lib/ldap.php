@@ -58,6 +58,9 @@ class ldap {
     }
 
     
+    public function __destruct() {
+        ldap_unbind($this->_conexion);
+    }
     
     /**
      * Función validarUsuario
@@ -158,7 +161,11 @@ class ldap {
         ldap_modify($this->_conexion, $dn, $nuevosdatos);
     }
 
+    
+    
+    
     public function infoUsuario($usuario, $camposMostrar = false) {
+        $mensaje = '';
         $this->_filtroBusqueda = "(name=$usuario)";
 
         if (!$camposMostrar)
@@ -178,7 +185,7 @@ class ldap {
             $atributos = ldap_get_attributes($this->_conexion, $entrada);
 
             // Imprimimos el número de atributos que tiene la entrada
-            echo "Atributos de esta entrada: " . $atributos['count'] . "<br/>";
+            $mensaje = "Atributos de esta entrada: " . $atributos['count'] . "<br/>";
 
             // Imprimimos el contenido de todos los atributos de cada entrada.
             for ($i = 0; $i < $atributos['count']; $i++) {
@@ -189,14 +196,33 @@ class ldap {
                 // en ese array.
                 // Hacemos un bucle por si tenemos atributos duplicados.
                 // Eso se sabe consultando $dato['count'] que sería distinto de 1.
-                for ($j = 0; $j < $dato['count']; $j++)
-                    echo $atributos[$i] . ":" . $dato[$j] . "<br/>";
+                for ($j = 0; $j < $dato['count']; $j++) {
+                    $mensaje.=$atributos[$i] . ":" . $dato[$j] . "<br/>";
+
+                    // Actualizamos las variables públicas del objeto.
+                    switch ($atributos[$i]) {
+                        case 'mail':
+                            $this->mail = $dato[$j];
+                            break;
+                        case 'displayName':
+                            $this->displayname = $dato[$j];
+                            break;
+                        case 'name':
+                            $this->name = $dato[$j];
+                            break;
+                    }
+                }
             }
 
-            echo "DN del usuario: " . ldap_get_dn($this->_conexion, $entrada);
+            $mensaje.="DN del usuario: " . ldap_get_dn($this->_conexion, $entrada);
+
+
+            $mensaje.="<hr/>";
+
             $this->dn = ldap_get_dn($this->_conexion, $entrada);
 
-            echo "<hr/>";
+
+            return $mensaje;
         } // bucle for.
     }
 
