@@ -54,9 +54,16 @@ switch ($_GET['op']) {
     case 9: // Petición JSON a flightRadar24.
         echo file_get_contents("http://www.flightradar24.com/AirportInfoService.php?airport={$_POST['iata']}&type={$_POST['tipo']}");
         break;
-    
+
     case 10: // Consultas RSS
-        $mirss=new rss($_POST['titulo'],$_POST['url']);
+        $mirss = new rss($_POST['titulo'], $_POST['url']);
         echo $mirss->contenidoRSS();
+        break;
+
+    case 11: // Tiempo JSON wunderground.com
+        echo file_get_contents("http://api.wunderground.com/api/".Config::$keywunderground."/conditions/forecast/lang:SP/q/" . str_replace(' ', '_', $_POST['pais']) . "/" . str_replace(' ', '_', $_POST['localidad']) . ".json");
+        break;
+    
+    
 }
 ?>
