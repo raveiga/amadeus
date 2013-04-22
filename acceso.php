@@ -48,7 +48,7 @@
                     </tr>
                     <tr>
                         <th>
-                            <label for="password">Autenticación</label>
+                            <label for="autenticacion">Autenticación</label>
                         </th>
                         <td>
                             <select id="autenticacion" name="autenticacion">
