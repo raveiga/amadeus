@@ -11,9 +11,6 @@ class Config{
     public static $dbUsuario = 'c2base1';
     public static $dbPassword = 'abc123.';
 
-    // API Key wunderground.com Méteo.
-    public static $keywunderground = '61f45636d937aab9';
-    
     // Datos de configuración para el correo.
     public static $mailNombreRemitente = 'Nombre y Apellidos';
     public static $mailEmailRemitente = 'info@veiga.local';
