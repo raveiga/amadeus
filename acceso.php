@@ -1,3 +1,6 @@
+<?php 
+    require_once 'lib/config.php';
+?>
 <script type="text/javascript" src="js/acceso.js"></script>
 
 <style type="text/css">
@@ -53,7 +56,7 @@
                         <td>
                             <select id="autenticacion" name="autenticacion">
                                 <option value="local" selected>Amadeus</option>
-                                <option value="ldap">sanclemente.local</option>
+                                <option value="ldap"><?php echo Config::$ldapDominio; ?></option>
                             </select>
                         </td>
                     </tr>                   

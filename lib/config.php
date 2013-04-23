@@ -22,6 +22,21 @@ class Config{
     public static $mailUsuario = 'info@veiga.local';
     public static $mailPassword = 'abc123.';
     
+    // Datos configuración autenticación LDAP
+    public static $ldapServidor='localhost';
+    public static $ldapPuerto='32500';
+    public static $ldapDominio='sanclemente.local';
+    
+    
+    // Datos autenticación OAuth en Twitter obtenidos de nuestra configuración en:
+    // http://dev.twitter.com
+    public static $consumerKey='GXRtix4VvRoik7mq3z0w';
+    public static $consumerSecret='oac66gVZkA2vYM9m2dLeUinLQV5W4nxUUuXnpCOUbo';
+    
+    public static $requestTokenUrl='https://api.twitter.com/oauth/request_token';
+    public static $authorizeUrl='https://api.twitter.com/oauth/authorize';
+    public static $accessTokenUrl='https://api.twitter.com/oauth/access_token';
+    public static $callbackUrl='http://www.veiga.local/amadeus/twitter/callback.php';
     
     
     // Datos de configuración del servidor de correo para cuenta de GMAIL.

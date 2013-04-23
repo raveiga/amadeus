@@ -14,6 +14,18 @@ $(document).ready(function(){
         $("#dni").val(persona.dni);
         $("#email").val(persona.email);
         $("#telefono").val(persona.telefono);
+        
+        if (persona.token=='ldap')
+            {
+                // Indicamos que son datos obtenidos de LDAP.
+                $("#titulo").append(" (usuario LDAP).");
+                // Sólo permitimos modificar los campos: 
+                // DNI y teléfono. Desactivamos los otros.
+                $("#password").attr("disabled","disabled");
+                $("#nombre").attr("disabled","disabled");
+                $("#apellidos").attr("disabled","disabled");
+                $("#email").attr("disabled","disabled");
+            }
     });
    
    
@@ -24,7 +36,10 @@ $(document).ready(function(){
        
         // Cancelamos el evento por defecto de envío de datos.
         evento.preventDefault();
-       
+
+        // Activamos todos los campos antes de enviar
+        $("input").attr("disabled",false);
+        
         // Metemos todos los datos del formulario en la variable datos.
         var datos=$("#formulario").serializeArray();
        

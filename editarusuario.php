@@ -33,7 +33,7 @@
         </div>
 
         <div class="grid-10 grid">
-            <h3>Modifique sus datos personales</h3>
+            <h3 id="titulo">Modifique sus datos personales</h3>
             <div id="mensajes"></div>
             <form action="#" name="formulario" id="formulario" method="post">
                 <table class="form">
