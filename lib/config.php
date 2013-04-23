@@ -23,13 +23,14 @@ class Config{
     public static $mailPassword = 'abc123.';
     
     // Datos configuración autenticación LDAP
-    public static $ldapServidor='localhost';
-    public static $ldapPuerto='32500';
+    public static $ldapServidor='10.0.4.1';
+    public static $ldapPuerto='389';
     public static $ldapDominio='sanclemente.local';
     
     
     // Datos autenticación OAuth en Twitter obtenidos de nuestra configuración en:
     // http://dev.twitter.com
+    // Cada usuario deberá poner sus propios datos aquí.
     public static $consumerKey='GXRtix4VvRoik7mq3z0w';
     public static $consumerSecret='oac66gVZkA2vYM9m2dLeUinLQV5W4nxUUuXnpCOUbo';
     
