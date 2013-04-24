@@ -194,6 +194,7 @@ class Basedatos {
             return "<h3>Su registro ha sido confirmado satisfactoriamente</h3>";
         }
         else
+            
             return "Error: los datos de validación son incorrectos";
     }
 
