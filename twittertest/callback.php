@@ -12,10 +12,16 @@ if (!empty($_GET))      // Procedemos de Twitter....
     // y que continúe el proceso dónde lo dejó. Recordar que tenemos variables de sesión que nos permiten
     // saber en que fase estamos de todo el proceso.
     require_once 'twitter.php';
-    
     $twitter = new twitter();
     
-    // Pendiente de completar...
+    // Si tenemos el acceso concedido en Twitter...
+    if ($twitter->oauth_acceso_concedido == true)
+    {
+        header("Location: ".$_SESSION['urldestino']);
+    }
+    else
+        die("ERROR: Has impedido el acceso a la página de Amadeus.");
+        
     
     
     

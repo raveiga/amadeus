@@ -37,7 +37,7 @@ class Config{
     public static $requestTokenUrl='https://api.twitter.com/oauth/request_token';
     public static $authorizeUrl='https://api.twitter.com/oauth/authorize';
     public static $accessTokenUrl='https://api.twitter.com/oauth/access_token';
-    public static $callbackUrl='http://www.veiga.local/amadeus/twitter/callback.php';
+    public static $callbackUrl='http://www.veiga.local/amadeus/twittertest/callback.php';
     
     
     // Datos de configuración del servidor de correo para cuenta de GMAIL.
