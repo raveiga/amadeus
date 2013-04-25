@@ -229,7 +229,10 @@ class Basedatos {
                 $stmt->fetch();
 
                 if ($token != 'OK')
-                    return 'Su e-mail no fue validado. Compruebe su buzón';
+                    if ($token == 'ldap')
+                        return 'Su cuenta de usuario es una cuenta LDAP.<br/>!! Valídese en el dominio !!';
+                    else
+                        return 'Su e-mail no fue validado. Compruebe su buzón';
 
                 // Comprobamos la contraseña
                 if (crypt($pass, $password) == $password) {
@@ -264,11 +267,12 @@ class Basedatos {
                 $_SESSION['usuario'] = $ldap->name;
                 $_SESSION['token'] = 'ldap';
 
-                if ($this->chequearNick("$nick") == 'Nick disponible') {   // El usuario no está creado en la base de datos, lo creamos en modo local.
+                if ($this->chequearNick("$nick") == 'Nick disponible') 
+                {   // El usuario no está creado en la base de datos, lo creamos en modo local.
                     $this->insertarUsuario($nick, '', $ldap->name, $ldap->displayname, '', $ldap->mail, '', 'ldap');
                 }
                 else
-                    return "ERROR: Ese usuario está creado localmente en Amadeus.";
+                    return "ERROR: El modo de autenticación para este usuario<br/>no es el correcto.";
 
                 return "OK";
             }
