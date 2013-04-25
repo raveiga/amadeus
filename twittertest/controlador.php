@@ -28,6 +28,7 @@ function colorear($datos) {
     // Formato reducido del if anterior:
     //      $format = (is_array($data)) ? 'array' : 'json';
 
+    // json_decode($datos,TRUE) -> true es para que devuelva un array asociativo, sino devolvería un objeto.
     highlight_string('<?php ' . print_r(($format === 'json' ? json_decode($datos, TRUE) : $datos), TRUE) . ' ?>');
     exit;
 }
