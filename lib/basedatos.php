@@ -1,5 +1,6 @@
 <?php
 
+@session_start();
 // Gestión de la base de datos MySQL.
 // Ejemplo de dirname:
 // La constante predefinida __FILE__ de php contiene la ruta fisica real del fichero, por ejemplo para este fichero podría ser: /var/www/amadeus/basedatos.php
@@ -8,7 +9,8 @@
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/funciones.php';
 
-class Basedatos {
+class Basedatos
+{
 
     /**
      * @var Basedatos Contiene la instancia de Basedatos. 
@@ -28,8 +30,10 @@ class Basedatos {
      * 
      * @return Basedatos Devuelve la referencia al objeto Basedatos.
      */
-    public static function getInstancia() {
-        if (!self::$_instancia instanceof self) {
+    public static function getInstancia()
+    {
+        if (!self::$_instancia instanceof self)
+        {
             // Creamos una nueva instancia de basedatos.
             self::$_instancia = new self;
         }
@@ -38,10 +42,12 @@ class Basedatos {
         return self::$_instancia;
     }
 
-    private function __construct() {
+    private function __construct()
+    {
         // Creamos el objeto mysqli y lo asignamos a $_mysqli
         self::$_mysqli = @new mysqli(Config::$dbServidor, Config::$dbUsuario, Config::$dbPassword, Config::$dbDatabase);
-        if (self::$_mysqli->connect_error) {
+        if (self::$_mysqli->connect_error)
+        {
             echo "Error conectando Base Datos" . self::$_mysqli->connect_error;
             self::$_mysqli = false;
             die();
@@ -56,8 +62,10 @@ class Basedatos {
      * @access public
      * @return boolean Siempre devolverá true.
      */
-    public function close() {
-        if (self::$_mysqli) {
+    public function close()
+    {
+        if (self::$_mysqli)
+        {
             self::$_mysqli->close();
             self::$_mysqli = false;
         }
@@ -78,8 +86,10 @@ class Basedatos {
      * @param string $telefono
      * @return string "OK" indicando que se ha realizado con éxito la insercción de datos.
      */
-    public function insertarUsuario($nick, $password, $nombre, $apellidos, $dni, $email, $telefono, $tipo = 'local', $atoken = 'null', $atsecret = '') {
-        switch ($tipo) {
+    public function insertarUsuario($nick, $password, $nombre, $apellidos, $dni, $email, $telefono, $tipo = 'local', $atoken = 'null', $atokensecret = '')
+    {
+        switch ($tipo)
+        {
             case 'local':
                 // Preparamos la instrucción SQL.
                 $stmt = self::$_mysqli->prepare("insert into amadeus_usuarios(nick,password,nombre,apellidos,dni,email,telefono,token) values(?,?,?,?,?,?,?,?)") or die(self::$_mysqli->error);
@@ -118,7 +128,15 @@ class Basedatos {
                 break;
 
             case 'twitter':
-
+                // Preparamos la instrucción SQL.
+                $stmt = self::$_mysqli->prepare("insert into amadeus_usuarios(nick,password,nombre,apellidos,dni,email,telefono,token,access_token,access_token_secret) values(?,?,?,?,?,?,?,?,?,?)") or die(self::$_mysqli->error);
+                // Enlazamos los parámetros.
+                $nick = strtolower($nick);
+                $encriptada = encriptar($nick, 9);
+                $token = 'twitter';
+                $stmt->bind_param('ssssssssss', $nick, $encriptada, $nombre, $apellidos, $dni, $email, $telefono, $token, $atoken, $atokensecret);
+                // Ejecutar la SQL.
+                $stmt->execute() or die(self::$_mysqli->error);
                 break;
         }
     }
@@ -132,9 +150,13 @@ class Basedatos {
      * @param string $nick Nick del usuario.
      * @return string Mensaje de en uso o disponible.
      */
-    public function chequearNick($nick) {
+    public function chequearNick($nick, $modo = 'local')
+    {
         // Preparamos la consulta.
-        $stmt = self::$_mysqli->prepare("SELECT * from amadeus_usuarios where nick=?") or (self::$_mysqli->error);
+        if ($modo == 'local')
+            $stmt = self::$_mysqli->prepare("SELECT * from amadeus_usuarios where nick=?") or (self::$_mysqli->error);
+        else
+            $stmt = self::$_mysqli->prepare("SELECT * from amadeus_usuarios where nick=? and token='twitter'") or (self::$_mysqli->error);
 
         // Enlazamos los parámetros (s string)
         // http://es2.php.net/manual/es/mysqli-stmt.bind-param.php
@@ -168,7 +190,8 @@ class Basedatos {
      * @param string $token Token recibido por e-mail.
      * @return string Mensaje de confirmación de actualización.
      */
-    public function confirmarRegistro($nick, $token) {
+    public function confirmarRegistro($nick, $token)
+    {
         $nick = strtolower($nick);
 
         $stmt = self::$_mysqli->prepare("select * from amadeus_usuarios where nick=? and token=?") or die(self::$_mysqli->error);
@@ -185,7 +208,8 @@ class Basedatos {
         // Número de filas obtenidas en la consulta.
         $numfilas = $stmt->num_rows;
 
-        if ($numfilas == 1) {
+        if ($numfilas == 1)
+        {
             // Los datos son correctos.
             // Actualizamos el token a OK.
             // Preparamos la consulta de actualizacion
@@ -211,8 +235,10 @@ class Basedatos {
      * @param string $pass Contraseña a comprobar.
      * @return string Mensaje de confirmación. OK si todo fue correcto.
      */
-    public function chequearAcceso($nick, $pass, $autenticacion = 'local') {
-        switch ($autenticacion) {
+    public function chequearAcceso($nick, $pass, $autenticacion = 'local')
+    {
+        switch ($autenticacion)
+        {
             case 'local':
                 // Preparamos la consulta.
                 $nick = strtolower($nick);
@@ -232,7 +258,8 @@ class Basedatos {
                 // Número de filas obtenidas
                 $numfilas = $stmt->num_rows;
 
-                if ($numfilas == 1) {
+                if ($numfilas == 1)
+                {
                     // Leemos la fila del recordset
                     $stmt->fetch();
 
@@ -243,7 +270,8 @@ class Basedatos {
                             return 'Su e-mail no fue validado. Compruebe su buzón';
 
                     // Comprobamos la contraseña
-                    if (crypt($pass, $password) == $password) {
+                    if (crypt($pass, $password) == $password)
+                    {
                         // Creamos las variables de sesión para el usuario conectado.
                         $_SESSION['usuario'] = $nick;
                         $_SESSION['nombre'] = $nombre;
@@ -266,7 +294,8 @@ class Basedatos {
 
                 // Creamos un objeto de tipo ldap
                 $ldap = new ldap(Config::$ldapServidor, Config::$ldapPuerto);
-                if ($ldap->validarUsuario("$nick", Config::$ldapDominio, "$pass")) {
+                if ($ldap->validarUsuario("$nick", Config::$ldapDominio, "$pass"))
+                {
                     // Obtenemos la información del usuario en el LDAP.
                     $datos = $ldap->infoUsuariO("$nick");
 
@@ -277,7 +306,8 @@ class Basedatos {
                     $_SESSION['usuario'] = $ldap->name;
                     $_SESSION['token'] = 'ldap';
 
-                    if ($this->chequearNick("$nick") == 'Nick disponible') {   // El usuario no está creado en la base de datos, lo creamos en modo local.
+                    if ($this->chequearNick("$nick") == 'Nick disponible')
+                    {   // El usuario no está creado en la base de datos, lo creamos en modo local.
                         $this->insertarUsuario($nick, '', $ldap->name, $ldap->displayname, '', $ldap->mail, '', 'ldap');
                     }
                     else
@@ -287,17 +317,6 @@ class Basedatos {
                 }
                 else
                     echo "ERROR LDAP: datos incorrectos de acceso.";
-                break;
-
-
-            case 'twitter':
-                if ($this->chequearNick("$nick") == 'Nick disponible') {   // El usuario no está creado en la base de datos, lo insertamos en modo local.
-                    $this->insertarUsuario($nick, '', $_SESSION['nombre'], '', '', '', '', 'twitter');
-                }
-                else
-                    return "ERROR: El modo de autenticación para este usuario<br/>no es el correcto.";
-
-                return "OK";
                 break;
         }
     }
@@ -310,7 +329,8 @@ class Basedatos {
      * 
      * 
      */
-    public function obtenerInfoUsuario() {
+    public function obtenerInfoUsuario()
+    {
         // Preparamos la consulta.
         $stmt = self::$_mysqli->prepare("select password, nombre, apellidos, dni, email, telefono, token, fotografia from amadeus_usuarios where nick=?") or die(self::$_mysqli->error);
 
@@ -360,7 +380,8 @@ class Basedatos {
      * @param string $telefono
      * @return string Mensaje de confirmación de la actualización de confirmación del usuario.
      */
-    public function actualizarUsuario($pass, $nombre, $apellidos, $dni, $email, $telefono) {
+    public function actualizarUsuario($pass, $nombre, $apellidos, $dni, $email, $telefono)
+    {
         // Usamos el nick del usuario logueado.
         $nick = $_SESSION['usuario'];
 
@@ -378,7 +399,8 @@ class Basedatos {
         else
             $token = $_SESSION['token'];
 
-        if ($_SESSION['token'] != 'ldap') {
+        if ($_SESSION['token'] != 'ldap' && $_SESSION['token']!='twitter')
+        {
             // Preparamos la instrucción SQL.
             $stmt = self::$_mysqli->prepare("update amadeus_usuarios set password=?, nombre=?, apellidos=?, dni=?, email=?, telefono=?, token=? where nick=?") or die(self::$_mysqli->error);
 
@@ -389,7 +411,8 @@ class Basedatos {
             $stmt->execute() or die(self::$_mysqli->error);
 
             // Si el email se modificó reenviamos el correo.
-            if ($email != $_SESSION['email']) {
+            if ($email != $_SESSION['email'])
+            {
                 $contenido = "Estimado señor/a $nombre $apellidos.<br/><br/>Hemos recibido una petición de modificación de e-mail en su cuenta de viajes Amadeus.";
                 $contenido.="Debe confirmar este cambio de correo para poder volver acceder a la web Amadeus. Hágalo en la siguiente dirección:<br/>";
                 $contenido.="<a href='" . Config::$urlAplicacion . "/confirmar.html?nick=$nick&token=$token'>Confirmación cambio de e-mail en web viajes Amadeus</a><br/><br/>";
@@ -402,7 +425,8 @@ class Basedatos {
                     return "!! ATENCION !!<br/><br/>Se ha producido un fallo al enviar el correo a $email.<br/>Contacte con " . Config::$mailEmailRemitente . " para informar del problema.";
             }
         }
-        else {
+        elseif ($_SESSION['token'] == 'ldap')
+        {
             // Preparamos la instrucción SQL para actualizar los datos de DNI y demás.
             $stmt = self::$_mysqli->prepare("update amadeus_usuarios set dni=?, telefono=? where nick=?") or die(self::$_mysqli->error);
 
@@ -411,6 +435,17 @@ class Basedatos {
 
             // Ejecutamos la instrucción.
             $stmt->execute() or die(self::$_mysqli->error);
+        }
+        else    // Es un formulario de Twitter.
+        {
+            // Preparamos la instrucción SQL para actualizar los datos de DNI y demás.
+            $stmt = self::$_mysqli->prepare("update amadeus_usuarios set apellidos=?, dni=?, email=?, telefono=? where nick=?") or die(self::$_mysqli->error);
+
+            // Enlazamos los parámetros.
+            $stmt->bind_param("sssss", $apellidos, $dni, $email, $telefono, $nick);
+
+            // Ejecutamos la instrucción.
+            $stmt->execute() or die(self::$_mysqli->error); 
         }
 
         return "Se han realizados los cambios correctamente.";
@@ -424,7 +459,8 @@ class Basedatos {
      * @param string $fotografia El nombre del fichero que se actualizará en el campo de la tabla.
      * @return boolean true cuando termina la actualización de la fotografía.
      */
-    public function actualizarFoto($fotografia) {
+    public function actualizarFoto($fotografia)
+    {
         // El nick es el del usuario logueado.
         $nick = $_SESSION['usuario'];
 
@@ -447,7 +483,8 @@ class Basedatos {
      * 
      * @return boolean true al termina.
      */
-    public function borrarFoto() {
+    public function borrarFoto()
+    {
         // El nick del usuario es:
         $nick = $_SESSION['usuario'];
 
@@ -470,7 +507,8 @@ class Basedatos {
      * 
      * @return string Ok Cuando termina el proceso.
      */
-    public function borrarUsuario() {
+    public function borrarUsuario()
+    {
         $nick = $_SESSION['usuario'];
 
         // Preparamos la consulta
@@ -481,7 +519,8 @@ class Basedatos {
         // Ejecutamos la consulta.
         $stmt->execute();
 
-        if (isset($_SESSION['fotografia']) && $_SESSION['fotografia'] != '') {
+        if (isset($_SESSION['fotografia']) && $_SESSION['fotografia'] != '')
+        {
 
             // Directorio de envío de imágenes.
             $directorioImagenes = substr(__FILE__, 0, strlen(__FILE__) - strlen(basename(__FILE__)) - 4) . 'img/usuarios/';
@@ -494,13 +533,17 @@ class Basedatos {
         return 'OK';
     }
 
-    public function obtenerAeropuertos($latNE = '', $lonNE = '', $latSW = '', $lonSW = '') {
-        if ($latNE != '') {
+    public function obtenerAeropuertos($latNE = '', $lonNE = '', $latSW = '', $lonSW = '')
+    {
+        if ($latNE != '')
+        {
             // Preparamos la consulta
             $stmt = self::$_mysqli->prepare("select id,aeropuerto,ciudad,pais,iata,icao,latitud,longitud,elevacion from amadeus_aeropuertos where latitud<=? and latitud>=? and longitud<=? and longitud>=?") or die(self::$_mysqli->error);
 
             $stmt->bind_param("dddd", $latNE, $latSW, $lonNE, $lonSW);
-        } else {
+        }
+        else
+        {
             // Preparamos la consulta
             $stmt = self::$_mysqli->prepare("select id,aeropuerto,ciudad,pais,iata,icao,latitud,longitud,elevacion from amadeus_aeropuertos") or die(self::$_mysqli->error);
         }
@@ -516,7 +559,8 @@ class Basedatos {
         $datos = Array();
 
         // Leemos las filas del recordset.
-        while ($fila = $stmt->fetch()) {
+        while ($fila = $stmt->fetch())
+        {
             $datos[$id] = array("id" => $id, "aeropuerto" => $aeropuerto, "ciudad" => $ciudad, "pais" => $pais, "iata" => $iata, "icao" => $icao, "latitud" => $latitud, "longitud" => $longitud, "elevacion" => $elevacion);
         }
 
@@ -529,7 +573,8 @@ class Basedatos {
         // Liberamos espacio
     }
 
-    public function sugerirAeropuertos($aeropuerto) {
+    public function sugerirAeropuertos($aeropuerto)
+    {
         // Preparamos la consulta
         $stmt = self::$_mysqli->prepare("select aeropuerto,ciudad,pais,iata,latitud,longitud from amadeus_aeropuertos where aeropuerto like ? order by aeropuerto limit 10") or die(self::$_mysqli->error);
 
@@ -548,7 +593,8 @@ class Basedatos {
         $contador = 0;
 
         // Leemos las filas del recordset.
-        while ($fila = $stmt->fetch()) {
+        while ($fila = $stmt->fetch())
+        {
             $datos[$contador] = array("aeropuerto" => $aeropuerto, "ciudad" => $ciudad, "pais" => $pais, "iata" => $iata, "latitud" => $latitud, "longitud" => $longitud);
             $contador++;
         }

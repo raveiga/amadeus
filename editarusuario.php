@@ -23,7 +23,7 @@
                     <li><a href="editarusuario.html" />Modifique sus datos personales</a></li>
                     <li><a href="subirfoto.html" />Subir Fotografía</a></li>
                     <?php
-                    if (isset($_SESSION['fotografia']) && $_SESSION['fotografia']!='')
+                    if (isset($_SESSION['fotografia']) && $_SESSION['fotografia'] != '')
                         echo '<li><a href="borrarfoto.php" />Borrar Fotografía</a></li>';
                     ?>
                     <li><a href="#" id="bajausuario"/>Darse de Baja</a></li>
@@ -33,7 +33,7 @@
         </div>
 
         <div class="grid-10 grid">
-            <h3 id="titulo">Modifique sus datos personales</h3>
+            <h4 id='titulo'>Modifique sus datos personales</h4>
             <div id="mensajes"></div>
             <form action="#" name="formulario" id="formulario" method="post">
                 <table class="form">
@@ -82,7 +82,7 @@
                             <label for="email">E-mail</label>
                         </th>
                         <td>
-                            <input type="e-mail" id="email" name="email" required="required" />
+                            <input type="email" id="email" name="email" required="required" />
                         </td>
                     </tr>
 

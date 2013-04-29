@@ -16,16 +16,26 @@ $(document).ready(function(){
         $("#telefono").val(persona.telefono);
         
         if (persona.token=='ldap')
-            {
-                // Indicamos que son datos obtenidos de LDAP.
-                $("#titulo").append(" (usuario LDAP).");
-                // Sólo permitimos modificar los campos: 
-                // DNI y teléfono. Desactivamos los otros.
-                $("#password").attr("disabled","disabled");
-                $("#nombre").attr("disabled","disabled");
-                $("#apellidos").attr("disabled","disabled");
-                $("#email").attr("disabled","disabled");
-            }
+        {
+            // Indicamos que son datos obtenidos de LDAP.
+            $("#titulo").append(" (usuario LDAP).");
+            // Sólo permitimos modificar los campos: 
+            // DNI y teléfono. Desactivamos los otros.
+            $("#password").attr("disabled","disabled");
+            $("#nombre").attr("disabled","disabled");
+            $("#apellidos").attr("disabled","disabled");
+            $("#email").attr("disabled","disabled");
+        }
+            
+        if (persona.token=='twitter')
+        {
+            // Indicamos que son datos obtenidos de LDAP.
+            $("#titulo").append(" (usuario TWITTER).");
+            // Sólo permitimos modificar los campos: 
+            // DNI y teléfono. Desactivamos los otros.
+            $("#password").attr("disabled","disabled");
+            $("#nombre").attr("disabled","disabled");
+        }
     });
    
    
@@ -63,11 +73,7 @@ $(document).ready(function(){
                     window.location.href="desconectar.php";
            
             })
-           
-           
-           
         }
-    
     });
 
    
