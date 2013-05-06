@@ -24,6 +24,12 @@
           <li><a href="noticias.html">Noticias</a></li>
           <li><a href="tiempo.html">El Tiempo</a></li>
           <?php
+          if (isset($_SESSION['twitter']))
+          {
+                echo '<li><a href="twitter.html">Twitter</a></li> ';
+          }
+
+
           if (isset($_SESSION['usuario']))
           {
              echo '<li><a href="editarusuario.html">Modificar Datos</a></li> ';

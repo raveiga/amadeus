@@ -26,6 +26,7 @@
                     if (isset($_SESSION['fotografia']) && $_SESSION['fotografia'] != '')
                         echo '<li><a href="borrarfoto.php" />Borrar Fotografía</a></li>';
                     ?>
+                    <li><a href="#" id="imprimircarnet" />Imprimir/Enviar Carnet Socio</a></li>
                     <li><a href="#" id="bajausuario" />Darse de Baja</a></li>
                 </ul>
                 </p>
@@ -38,7 +39,7 @@
             <form action="upload.php" name="form1" id="form1" method="post" enctype="multipart/form-data">
                 <p><input type="file" name="ficherosubido" id="ficherosubido" /><br/>
                     Extensiones: jpg, jpeg, gif, png.
-                </p> 
+                </p>
 
                 <p>
                     <input type="reset" value="Limpiar" class="float_right">

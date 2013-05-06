@@ -26,8 +26,4 @@ if (!empty($_GET['oauth_verifier']) && !empty($_SESSION['request_token']) && !em
     header('Location:logintwitter.php');
 }
 
-
-
-
-
 ?>
