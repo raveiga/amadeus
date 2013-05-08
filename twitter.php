@@ -21,7 +21,7 @@
                 <p>Operaciones que puede realizar sobre<br/>su cuenta de Twitter.</p>
                 <ul>
                     <li><input type="button" id="misdatos" name="misdatos" value="Mis Datos en Twitter"/></li>
-                    <li><input type="button" id="status" name="status" value="Mostrar mis últimos status"/></li>
+                    <li><input type="button" id="status" name="status" value="Mostrar mi Timeline"/></li>
                     <li><input type="button" id="timeline" name="timeline" value="Timeline de otros usuario (@elpais)"/></li>
                     <li><input type="button" id="publicar" name="publicar" value="Publicar Mensaje en Twitter"/></li>
                 </ul>

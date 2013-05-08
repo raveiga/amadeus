@@ -24,7 +24,7 @@
                     <li><a href="subirfoto.html" />Subir Fotografía</a></li>
                     <?php
                     if (isset($_SESSION['fotografia']) && $_SESSION['fotografia'] != '')
-                        echo '<li><a href="borrarfoto.php" />Borrar Fotografía</a></li>';
+                            echo '<li><a href="borrarfoto.php" />Borrar Fotografía</a></li>';
                     ?>
                     <li><a href="#" id="imprimircarnet" />Imprimir/Enviar Carnet Socio</a></li>
                     <li><a href="#" id="bajausuario"/>Darse de Baja</a></li>

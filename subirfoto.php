@@ -34,8 +34,19 @@
         </div>
 
         <div class="grid-6 grid">
-            <h3>Fotografía de su perfil</h3>
+            <?php
+                if (isset($_SESSION['twitter']))
+                    echo '<h3>Fotografía en Twitter.</h3>';
+                else
+                    echo '<h3>Fotografía de su perfil</h3>';
+            ?>
+
             <div id="mensajes"></div>
+            <?php
+            if (!isset($_SESSION['twitter']))
+            {
+            ?>
+
             <form action="upload.php" name="form1" id="form1" method="post" enctype="multipart/form-data">
                 <p><input type="file" name="ficherosubido" id="ficherosubido" /><br/>
                     Extensiones: jpg, jpeg, gif, png.
@@ -46,15 +57,26 @@
                     <input type="submit" value="Subir Fotografia" class="float_right" />
                 </p>
             </form>
+            <?php
+            }
+            ?>
+
 
         </div><!--end of grid-6-->
 
         <div class="grid-4 grid">
             <?php
-            if (isset($_SESSION['fotografia']) && $_SESSION['fotografia'] != '')
-                echo "<img src='img/usuarios/{$_SESSION['fotografia']}' width='250'/>";
-            else
-                echo "Foto avatar no disponible.";
+            if (isset($_SESSION['twitter']))
+            {
+                // Mostramos la imagen de twitter.
+                // Cargamos la librería twitterOAuth
+                 echo "<img src='{$_SESSION['fototwitter']}' width='50'/>";
+            }
+
+            else if (isset($_SESSION['fotografia']) && $_SESSION['fotografia'] != '')
+                    echo "<img src='img/usuarios/{$_SESSION['fotografia']}' width='250'/>";
+                else
+                    echo "Foto avatar no disponible.";
             ?>
 
         </div>

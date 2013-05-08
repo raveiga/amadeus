@@ -62,7 +62,104 @@ switch ($_GET['op']) {
     case 11: // Tiempo JSON wunderground.com
         echo file_get_contents("http://api.wunderground.com/api/".Config::$keywunderground."/conditions/forecast/lang:SP/q/" . str_replace(' ', '_', $_POST['pais']) . "/" . str_replace(' ', '_', $_POST['localidad']) . ".json");
         break;
-    
-    
+
+    case 12: //Mis datos de twitter
+        // Cargamos la librería twitterOAuth
+        require_once 'lib/twitter/twitteroauth.php';
+
+        $twitter = new TwitterOauth(Config::$consumerKey, Config::$consumerSecret, $_SESSION['access_token'], $_SESSION['access_token_secret']);
+        switch ($_POST['boton'])
+        {
+            case 'misdatos':
+                $misdatos = $twitter->get('account/verify_credentials');
+
+                $nombre = $misdatos->name;
+                $cuenta = $misdatos->screen_name;
+                $fotografia = $misdatos->profile_image_url;
+                $descripcion = $misdatos->description;
+                $seguidores = $misdatos->followers_count;
+                $siguiendo = $misdatos->friends_count;
+                $num_tweets = $misdatos->statuses_count;
+
+                $contenido = "<table padding='0'>";
+                $contenido.="<tr><td><b>Nombre:</b> </td><td>" . $nombre . "</td></tr>";
+                $contenido.="<tr><td><b>Username: </b></td><td>" . $cuenta . "</td></tr>";
+                $contenido.="<tr><td><b>Foto Perfil: </b></td><td><img src='" . $fotografia . "'/></td></tr>";
+                $contenido.="<tr><td><b>Descripción: </b></td><td>" . $descripcion . "</td></tr>";
+                $contenido.="<tr><td><b>Tweets: </b></td><td>" . $num_tweets . "</td></tr>";
+                $contenido.="<tr><td><b>Seguidores: </b></td><td>" . $seguidores . "</td></tr>";
+                $contenido.="<tr><td><b>Siguiendo: </b></td><td>" . $siguiendo . "</td></tr>";
+                $contenido.="</table>";
+
+                echo $contenido;
+                break;
+
+            case 'status':
+                $status = $twitter->get('statuses/home_timeline');
+                $contenido = '';
+                for ($i = 0; $i < 16; $i++)
+                {
+                    $usuario = "<h5>" . $status[$i]->user->screen_name . "</h5>";
+                    $fecha = "<font color='#21610B'>" . $status[$i]->created_at . "</font>";
+                    $tweet = "<p>" . $status[$i]->text . "</p>";
+                    $imagen = "<img src='" . $status[$i]->user->profile_image_url . "' />";
+                    $contenido.="<div class='tweetstatus'>";
+                    $contenido.="<div class='imgstatus'>" . $imagen;
+                    $contenido.="</div>";
+                    $contenido.="<div class='cuerpotweet'>";
+                    $contenido.=$usuario;
+                    $contenido.=$fecha;
+                    $contenido.=$tweet;
+                    $contenido.="</div></div>";
+                }
+                echo $contenido;
+                break;
+
+            case 'timeline':
+                $timeline = $twitter->get('statuses/user_timeline', array('screen_name' => $_POST['informacion']));
+                $contenido = '';
+                if (isset($timeline->error) && $timeline->error == "Not authorized")
+                {
+                    $contenido.="Usuario protegido.";
+                }
+                else if (isset($timeline->errors[0]->code) && $timeline->errors[0]->code == "34")
+                {
+                    $contenido.="El usuario que ha introducido no existe.";
+                }
+                else if (isset($timeline[0]->user->screen_name))
+                {
+
+                    for ($i = 0; $i < 16; $i++)
+                    {
+                        if (!empty($timeline[$i]->user->screen_name))
+                        {
+                            $usuario = "<h5>" . $timeline[$i]->user->screen_name . "</h5>";
+                            $fecha = "<font color='#21610B'>" . $timeline[$i]->created_at . "</font>";
+                            $tweet = "<p>" . $timeline[$i]->text . "</p>";
+                            $imagen = "<img src='" . $timeline[$i]->user->profile_image_url . "'/>";
+                            $contenido.="<div class='tweetstatus'>";
+                            $contenido.="<div class='imgstatus'>" . $imagen."</div>";
+                            $contenido.="<div class='cuerpotweet'>";
+                            $contenido.=$usuario;
+                            $contenido.=$fecha . "<br/>";
+                            $contenido.=$tweet;
+                            $contenido.="</div></div>";
+
+                        }
+                    }
+                }
+                else
+                {
+                    $contenido.="Este usuario no ha twitteado nada todavía.<br/>";
+                }
+                echo $contenido;
+                break;
+
+            case 'publicar':
+                $publicacion = $twitter->post('statuses/update', array('status' => $_POST['informacion']));
+                echo "Su tweet fue publicado correctamente.";
+                break;
+        }
+        break;
 }
 ?>
