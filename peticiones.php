@@ -97,7 +97,7 @@ switch ($_GET['op']) {
             case 'status':
                 $status = $twitter->get('statuses/home_timeline');
                 $contenido = '';
-                for ($i = 0; $i < 16; $i++)
+                for ($i = 0; $i < count($status); $i++)
                 {
                     $usuario = "<h5>" . $status[$i]->user->screen_name . "</h5>";
                     $fecha = "<font color='#21610B'>" . $status[$i]->created_at . "</font>";
@@ -129,7 +129,7 @@ switch ($_GET['op']) {
                 else if (isset($timeline[0]->user->screen_name))
                 {
 
-                    for ($i = 0; $i < 16; $i++)
+                    for ($i = 0; $i < count($timeline); $i++)
                     {
                         if (!empty($timeline[$i]->user->screen_name))
                         {
