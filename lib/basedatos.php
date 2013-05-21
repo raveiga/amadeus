@@ -13,13 +13,13 @@ class Basedatos
 {
 
     /**
-     * @var Basedatos Contiene la instancia de Basedatos. 
+     * @var Basedatos Contiene la instancia de Basedatos.
      */
     private static $_instancia;
 
     /**
      *
-     * @var boolean|mysqli Contiene el objeto mysqli después de que se haya 
+     * @var boolean|mysqli Contiene el objeto mysqli después de que se haya
      * establecido la conexión.
      */
     private static $_mysqli = false;
@@ -27,7 +27,7 @@ class Basedatos
     //----------------------------------------------------------------------------------------------------
     /**
      * Crea la conexión al servidor o devuelve error parando la ejecución.
-     * 
+     *
      * @return Basedatos Devuelve la referencia al objeto Basedatos.
      */
     public static function getInstancia()
@@ -58,7 +58,7 @@ class Basedatos
     /**
      * Función close()
      * Cierra una conexión activa con el servidor
-     * 
+     *
      * @access public
      * @return boolean Siempre devolverá true.
      */
@@ -76,7 +76,7 @@ class Basedatos
     /**
      * Función insertarUsuario()
      * Inserta los datos recibidos como parámetros en la tabla de usuarios.
-     * 
+     *
      * @param string $nick
      * @param string $password
      * @param string $nombre
@@ -146,7 +146,7 @@ class Basedatos
     /**
      * Función chequearNick()
      * Comprueba si existe el nick en la base de datos.
-     * 
+     *
      * @param string $nick Nick del usuario.
      * @return string Mensaje de en uso o disponible.
      */
@@ -185,7 +185,7 @@ class Basedatos
     /**
      * Función confirmarRegistro()
      * Actualiza el token del usuario enviado por e-mail
-     * 
+     *
      * @param string $nick Nick del usuario.
      * @param string $token Token recibido por e-mail.
      * @return string Mensaje de confirmación de actualización.
@@ -230,7 +230,7 @@ class Basedatos
 
     //----------------------------------------------------------------------------------------------------
     /**
-     * 
+     *
      * @param string $nick Nick del usuario a comprobar
      * @param string $pass Contraseña a comprobar.
      * @return string Mensaje de confirmación. OK si todo fue correcto.
@@ -326,8 +326,8 @@ class Basedatos
     /**
      * Función obtenerInfoUsuario
      * Devuelve la información del usuario en formato JSON que hay en la base de datos, y actualiza las variables de sesión.
-     * 
-     * 
+     *
+     *
      */
     public function obtenerInfoUsuario()
     {
@@ -370,8 +370,8 @@ class Basedatos
     /**
      * Función actualizarUsuario
      * Actualiza la información del usuario en la base de datos.
-     * 
-     * 
+     *
+     *
      * @param string $pass
      * @param string $nombre
      * @param string $apellidos
@@ -445,7 +445,7 @@ class Basedatos
             $stmt->bind_param("sssss", $apellidos, $dni, $email, $telefono, $nick);
 
             // Ejecutamos la instrucción.
-            $stmt->execute() or die(self::$_mysqli->error); 
+            $stmt->execute() or die(self::$_mysqli->error);
         }
 
         return "Se han realizados los cambios correctamente.";
@@ -455,7 +455,7 @@ class Basedatos
     /**
      * Función actualizarFoto
      * Actualiza el nombre de la fotografía en la tabla del usuario.
-     * 
+     *
      * @param string $fotografia El nombre del fichero que se actualizará en el campo de la tabla.
      * @return boolean true cuando termina la actualización de la fotografía.
      */
@@ -480,7 +480,7 @@ class Basedatos
     /**
      * Función borrarFoto
      * Actualiza el campo fotografia en la tabla.
-     * 
+     *
      * @return boolean true al termina.
      */
     public function borrarFoto()
@@ -504,7 +504,7 @@ class Basedatos
     /**
      * Función borrarUsuario
      * Borrar los datos del usuario en la tabla y su fotografía.
-     * 
+     *
      * @return string Ok Cuando termina el proceso.
      */
     public function borrarUsuario()
@@ -608,6 +608,44 @@ class Basedatos
         // Liberamos espacio
     }
 
-}
 
+    /**
+     * Muestra un listado de usuarios por nombre y apellidos.
+     * 
+     * @return string
+     */
+    public function obtenerUsuarios()
+    {
+        // Preparamos la consulta.
+        $stmt = self::$_mysqli->prepare("select nombre, apellidos from amadeus_usuarios") or die(self::$_mysqli->error);
+
+        // Ejecutamos la consulta.
+        $stmt->execute();
+
+        // Almacenamos el resultado.
+        $stmt->store_result();
+
+        // Vinculamos las variables para el recordset.
+        $stmt->bind_result($nombre, $apellidos);
+
+        $cadena='<table border="1"><tr><th>Nombre</th><th>Apellidos</th></tr>';
+        // Leemos los datos del recordset
+        while ($stmt->fetch())
+        {
+            $cadena.='<tr><td>'.$nombre.'</td><td>'.$apellidos.'</td></tr>';
+        }
+
+        $cadena.='</table>';
+
+        // Liberamos el espacio ocupado por el recordset
+        $stmt->free_result();
+
+        // Devolvemos la cadena.
+        return $cadena;
+
+    }
+
+
+
+}
 ?>
