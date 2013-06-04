@@ -14,77 +14,87 @@
 </style>
 
 <div class="wrapper">
-    <div class="grids top">
-        <div class="grid-6 grid">
-            <h4>Opciones disponibles:</h4>
-            <div>
-                <p class="bottom">
-                <ul>
-                    <li><a href="editarusuario.html" />Modifique sus datos personales</a></li>
-                    <li><a href="subirfoto.html" />Subir Fotografía</a></li>
-                    <?php
-                    if (isset($_SESSION['fotografia']) && $_SESSION['fotografia'] != '')
-                        echo '<li><a href="borrarfoto.php" />Borrar Fotografía</a></li>';
-                    ?>
-                    <li><a href="#" id="imprimircarnet" />Imprimir/Enviar Carnet Socio</a></li>
-                    <li><a href="#" id="bajausuario" />Darse de Baja</a></li>
-                </ul>
-                </p>
-            </div>
-        </div>
 
-        <div class="grid-6 grid">
-            <?php
+    <?php
+    if (isset($_SESSION['usuario']) && $_SESSION['usuario'] != '')
+    {
+        ?>
+        <div class="grids top">
+            <div class="grid-6 grid">
+                <h4>Opciones disponibles:</h4>
+                <div>
+                    <p class="bottom">
+                    <ul>
+                        <li><a href="editarusuario.html" />Modifique sus datos personales</a></li>
+                        <li><a href="subirfoto.html" />Subir Fotografía</a></li>
+                        <?php
+                        if (isset($_SESSION['fotografia']) && $_SESSION['fotografia'] != '')
+                            echo '<li><a href="borrarfoto.php" />Borrar Fotografía</a></li>';
+                        ?>
+                        <li><a href="#" id="imprimircarnet" />Imprimir/Enviar Carnet Socio</a></li>
+                        <li><a href="#" id="bajausuario" />Darse de Baja</a></li>
+                    </ul>
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid-6 grid" id="mensajillos">
+                <?php
                 if (isset($_SESSION['twitter']))
                     echo '<h3>Fotografía en Twitter.</h3>';
                 else
                     echo '<h3>Fotografía de su perfil</h3>';
-            ?>
+                ?>
 
-            <div id="mensajes"></div>
-            <?php
-            if (!isset($_SESSION['twitter']))
-            {
-            ?>
+                <div id="mensajes"></div>
+                <?php
+                if (!isset($_SESSION['twitter']))
+                {
+                    ?>
 
-            <form action="upload.php" name="form1" id="form1" method="post" enctype="multipart/form-data">
-                <p><input type="file" name="ficherosubido" id="ficherosubido" /><br/>
-                    Extensiones: jpg, jpeg, gif, png.
-                </p>
+                    <form action="upload.php" name="form1" id="form1" method="post" enctype="multipart/form-data">
+                        <p><input type="file" name="ficherosubido" id="ficherosubido" /><br/>
+                            Extensiones: jpg, jpeg, gif, png.
+                        </p>
 
-                <p>
-                    <input type="reset" value="Limpiar" class="float_right">
-                    <input type="submit" value="Subir Fotografia" class="float_right" />
-                </p>
-            </form>
-            <?php
-            }
-            ?>
+                        <p>
+                            <input type="reset" value="Limpiar" class="float_right">
+                            <input type="submit" value="Subir Fotografia" class="float_right" />
+                        </p>
+                    </form>
+                    <?php
+                }
+                ?>
 
 
-        </div><!--end of grid-6-->
+            </div><!--end of grid-6-->
 
-        <div class="grid-4 grid">
-            <?php
-            if (isset($_SESSION['twitter']))
-            {
-                // Mostramos la imagen de twitter.
-                // Cargamos la librería twitterOAuth
-                 echo "<img src='{$_SESSION['fototwitter']}' width='50'/>";
-            }
-
-            else if (isset($_SESSION['fotografia']) && $_SESSION['fotografia'] != '')
+            <div class="grid-4 grid">
+                <?php
+                if (isset($_SESSION['twitter']))
+                {
+                    // Mostramos la imagen de twitter.
+                    // Cargamos la librería twitterOAuth
+                    echo "<img src='{$_SESSION['fototwitter']}' width='50'/>";
+                }
+                else if (isset($_SESSION['fotografia']) && $_SESSION['fotografia'] != '')
                     echo "<img src='img/usuarios/{$_SESSION['fotografia']}' width='250'/>";
                 else
                     echo "Foto avatar no disponible.";
-            ?>
+                ?>
 
-        </div>
-
-
+            </div>
 
 
 
-    </div><!--end of grids-->
+
+
+        </div><!--end of grids-->
+
+        <?php
+    }
+    else
+        echo "Acceso denegado a esta sección de la aplicación";
+    ?>
 
 </div>

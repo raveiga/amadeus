@@ -142,19 +142,41 @@ imagedestroy($imagen);
 
 
 # Texto a superponer en la imagen.
-$texto = "E-mail: info@dominio.com";
+$texto = "Amadeus Copyright ".date("Y").".";
 
 # Cargamos la imagen de fondo.
-$imagen = imagecreatefrompng("img/email.png");
+$imagen = imagecreatefromjpeg("img/email.jpg");
+
+$watermark=imagecreatefrompng("img/watermark.png");
+
+// Obtengo los tamaños de las imagenes 
+$anchoimagen = imagesx($imagen); 
+$altoimagen = imagesy($imagen); 
+$anchowatermark = imagesx($watermark); 
+$altowatermark = imagesy($watermark); 
 
 #Color del texto
-$color = imagecolorallocate($imagen, 19, 107, 216);
+$color = imagecolorallocate($imagen, 135, 159, 0);
 
-#Calculamos la distancia para centrar el texto.
-$px = (imagesx($imagen) - 7.5 * strlen($texto)) / 2;
+#Calculamos la distancia para colocar el texto
+$px = (imagesx($imagen) - strlen($texto)*7.5) ;
+
+//We will use alpha blending function to set blending option for both images to true:
+imagealphablending($imagen, true);
+imagealphablending($watermark, true);
+
+// imagecopy ( resource $dst_im , resource $src_im , int $dst_x , int $dst_y , int $src_x , int $src_y , int $src_w , int $src_h )
+// Copiamos el watermark a la imagen
+imagecopy($imagen,$watermark,$anchoimagen-$anchowatermark-5,$altoimagen - $altowatermark-5,0,0,$anchowatermark,$altowatermark); 
+
+
 
 // Situamos el texto en la imagen.
-imagestring($imagen, 4, $px, 190, $texto, $color);
+imagestring($imagen, 3, $anchoimagen- (7*strlen($texto)+30), $altoimagen-18, $texto, $color);
+
+
+
+imagesavealpha($imagen,true);
 
 // Enviamos la cabecera de imagen PNG.
 // Importantísimo no tener ningún espacio en blanco al principio del fichero PHP 
@@ -167,4 +189,6 @@ imagepng($imagen);
 // Destruimos la imagen en el servidor.
 imagedestroy($imagen);
 
-?>
+
+
+ ?>

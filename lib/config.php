@@ -57,6 +57,8 @@ class Config{
      * public static $mailPassword = 'xxxxxx';
      */
 
+    
+    public static $marcadeAgua='img/watermark.png';
 }
 
 ?>

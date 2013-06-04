@@ -76,6 +76,20 @@ $(document).ready(function(){
         }
     });
 
+
+    $("#imprimircarnet").click(function()
+    {
+            // Generamos el carnet PDF y lo enviamos
+            document.location="imprimircarnet.php";
+            
+            // Hacemos el envío del carnet pdf
+            $.post("imprimircarnet.php?fichero=1",function(resultado)
+            {
+                $("#mensajillos").fadeOut(0,function(){
+                    $(this).html(resultado).fadeIn();
+                });
+            })
+    });
    
     
 }); // Fin document.ready()

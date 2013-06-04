@@ -16,7 +16,8 @@ require_once("lib/rss.php");
 // el constructor es privado en la clase Basedatos.
 $mibase = Basedatos::getInstancia();
 
-switch ($_GET['op']) {
+switch ($_GET['op'])
+{
     case 1:  // Chequear nick
         echo $mibase->chequearNick($_POST['nick']);
         break;
@@ -27,7 +28,7 @@ switch ($_GET['op']) {
         break;
 
     case 3: // Chequear Inicio sesión
-        echo $mibase->chequearAcceso($_POST['nick'], $_POST['password'],$_POST['autenticacion']);
+        echo $mibase->chequearAcceso($_POST['nick'], $_POST['password'], $_POST['autenticacion']);
         break;
 
     case 4: // Obtener los datos del usuario
@@ -60,7 +61,7 @@ switch ($_GET['op']) {
         break;
 
     case 11: // Tiempo JSON wunderground.com
-        echo file_get_contents("http://api.wunderground.com/api/".Config::$keywunderground."/conditions/forecast/lang:SP/q/" . str_replace(' ', '_', $_POST['pais']) . "/" . str_replace(' ', '_', $_POST['localidad']) . ".json");
+        echo file_get_contents("http://api.wunderground.com/api/" . Config::$keywunderground . "/conditions/forecast/lang:SP/q/" . str_replace(' ', '_', $_POST['pais']) . "/" . str_replace(' ', '_', $_POST['localidad']) . ".json");
         break;
 
     case 12: //Mis datos de twitter
@@ -138,13 +139,12 @@ switch ($_GET['op']) {
                             $tweet = "<p>" . $timeline[$i]->text . "</p>";
                             $imagen = "<img src='" . $timeline[$i]->user->profile_image_url . "'/>";
                             $contenido.="<div class='tweetstatus'>";
-                            $contenido.="<div class='imgstatus'>" . $imagen."</div>";
+                            $contenido.="<div class='imgstatus'>" . $imagen . "</div>";
                             $contenido.="<div class='cuerpotweet'>";
                             $contenido.=$usuario;
                             $contenido.=$fecha . "<br/>";
                             $contenido.=$tweet;
                             $contenido.="</div></div>";
-
                         }
                     }
                 }
@@ -160,6 +160,12 @@ switch ($_GET['op']) {
                 echo "Su tweet fue publicado correctamente.";
                 break;
         }
+        break;
+
+    case 13: // Envío de carnet.
+        // Se genera el archivo y se envía por correo.
+        echo file_get_contents('imprimircarnet.php?fichero=1');
+        
         break;
 }
 ?>
