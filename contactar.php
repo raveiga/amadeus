@@ -1,4 +1,5 @@
-  <div class="wrapper">
+<script type="text/javascript" src="js/contactar.js"></script>
+<div class="wrapper">
 
 	       <div class="grids top">
 
@@ -12,7 +13,7 @@
 				   Spain<br /><br />
 				   Telefono: +34 981 580 496<br />
 				   Fax: +34 981 580 366<br />
-				   Email: proteger@este-email
+				   <img src="email.php">
                               </p>
 			 </div>
 
@@ -82,10 +83,10 @@
 					     <select class="input_full" id="subject" name="subject">
 
 						  <option value="">Elegir Asunto...</option>
-						  <option value="1k_2k">Preguntas</option>
-						  <option value="2k_3k">Proyecto</option>
-						  <option value="3k_4k">Feedback</option>
-						  <option value="4k_5k">Otros</option>
+						  <option value="Preguntas">Preguntas</option>
+						  <option value="Proyecto">Proyecto</option>
+						  <option value="Feedback">Feedback</option>
+						  <option value="Otros">Otros</option>
 
 					     </select>
 					</td>

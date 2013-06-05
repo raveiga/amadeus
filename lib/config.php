@@ -59,6 +59,7 @@ class Config{
 
     
     public static $marcadeAgua='img/watermark.png';
+    public static $webmasterAddress='info@veiga.local';
 }
 
 ?>

@@ -16,7 +16,7 @@ class rss {
     private $_url;
     private $_tiempoCache;
 
-    public function __construct($titulo, $url, $tiempo = 120) {
+    public function __construct($titulo, $url, $tiempo = 600) {
         // ...../lib/../rss/
         self::$_rutaCarpetaRSS = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'rss' . DIRECTORY_SEPARATOR;
         $this->_titulo = $titulo;

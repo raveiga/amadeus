@@ -23,6 +23,12 @@ switch ($_GET['op'])
         break;
 
     case 2: // Alta de usuarios
+        require_once 'lib/inputfilter/class.inputfilter.php';
+        
+        // Evitamos ataques XSS.
+        $filtro = new InputFilter();
+        $_POST = $filtro->process($_POST);
+        
         echo $mibase->insertarUsuario($_POST['nick'], $_POST['password'], $_POST['nombre'], $_POST['apellidos'], $_POST['dni'], $_POST['email'], $_POST['telefono']);
         // Enviamos a continuación el correo de registro.
         break;
@@ -165,7 +171,52 @@ switch ($_GET['op'])
     case 13: // Envío de carnet.
         // Se genera el archivo y se envía por correo.
         echo file_get_contents('imprimircarnet.php?fichero=1');
-        
         break;
+
+    case 14:
+        require_once 'lib/inputfilter/class.inputfilter.php';
+        
+        // Evitamos ataques XSS.
+        $filtro = new InputFilter();
+        $_POST = $filtro->process($_POST);
+
+        $nombre = $_POST['name'];
+        $email = $_POST['email'];
+        $tel = $_POST['tel'];
+        $url = $_POST['url'];
+        $asunto = $_POST['subject'];
+        $prioridad = $_POST['subject'];
+        $mensaje = $_POST['description'];
+        if (!isset($_POST['cc']) || $_POST['cc'] === '')
+            $copia = 'No';
+        else if ($_POST['cc'] === '1')
+            $copia = 'Si';
+
+        $contenido = "$nombre ha contactado a través del formulario de contacto<br/>";
+        $contenido .= "Los datos enviados son: <br/>";
+        $contenido .= "e-mail: $email <br/>";
+        $contenido .= "Tel: $tel <br/>";
+        $contenido .= "Referente a: $asunto <br/>";
+        $contenido .= "URL: $url <br/>";
+        $contenido .= "Asunto del mensaje: $prioridad <br/>";
+        $contenido .= "Mensaje: $mensaje <br/>";
+        $contenido .= "Correo de cortesía: $copia <br/>";
+
+        if ($copia === 'Si')
+        {
+            if (enviarCorreo($nombre, $email, 'Copia de cortesía', $contenido))
+                $contenido .= 'Envío de cortesía correcto';
+            else
+                $contenido .= 'Envío de cortesía error';
+        }
+
+        if (enviarCorreo(Config::$mailNombreRemitente, Config::$webmasterAddress, 'Envío desde formulario de contacto', $contenido))
+            echo "<h2>Envío del mensaje realizado correctamente.</h2>";
+        else
+            echo "!! ATENCIÓN !!<br/><br/>Se ha producido un error al enviar el formulario de contacto.<br/>Contacte con " . Config::$mailEmailRemitente . " para informar del problema.";
+
+        break;
+
+        
 }
 ?>
